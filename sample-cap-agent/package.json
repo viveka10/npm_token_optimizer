@@ -1,0 +1,80 @@
+{
+  "name": "sample-cap-agent",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sample CAP app that calls SAP AI Core through @viveka/cap-ai-token-optimizer",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "start": "cds-serve --in-memory?",
+    "watch": "cds watch",
+    "hybrid": "cds bind --exec --profile hybrid -- cds-serve"
+  },
+  "dependencies": {
+    "@sap-ai-sdk/orchestration": "^2.16.0",
+    "@sap/cds": "^10.1.1",
+    "@viveka/cap-ai-token-optimizer": "file:../cap-ai-token-optimizer"
+  },
+  "devDependencies": {
+    "@cap-js/cds-test": "^1.0.2",
+    "@cap-js/sqlite": "^3.1.1"
+  },
+  "cds": {
+    "requires": {
+      "aicore": {
+        "model": "gpt-4.1",
+        "[development]": {
+          "mock": true
+        },
+        "[hybrid]": {
+          "mock": false
+        }
+      },
+      "tokenOptimizer": {
+        "mode": "active",
+        "metrics": {
+          "exporters": [
+            "console",
+            "db"
+          ]
+        },
+        "useCases": {
+          "ask": {
+            "steps": {
+              "outputCap": {
+                "default": 256
+              }
+            }
+          },
+          "agent": {
+            "steps": {
+              "tools": {
+                "maxTools": 10,
+                "pinned": [
+                  "get_sales_order"
+                ]
+              }
+            }
+          }
+        },
+        "admin": {
+          "enabled": true
+        }
+      },
+      "auth": {
+        "[development]": {
+          "kind": "mocked",
+          "users": {
+            "ops": {
+              "roles": [
+                "TokenOptimizerAdmin"
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}

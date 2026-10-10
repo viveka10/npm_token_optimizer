@@ -1,0 +1,45 @@
+# Quick manual tests (VS Code REST Client / BAS). Start the app first: npm run watch
+# In development, mocked users are active: alice has no password.
+
+@host = http://localhost:4004
+@auth = Basic alice:
+
+### Ask a question
+POST {{host}}/odata/v4/agent/ask
+Authorization: {{auth}}
+Content-Type: application/json
+
+{ "question": "What is SAP CAP in one sentence?" }
+
+### Same question again: served from the optimizer cache (temperature 0)
+POST {{host}}/odata/v4/agent/ask
+Authorization: {{auth}}
+Content-Type: application/json
+
+{ "question": "What is SAP CAP in one sentence?" }
+
+### Agent with 32 tools and a multi-turn history
+POST {{host}}/odata/v4/agent/runAgent
+Authorization: {{auth}}
+Content-Type: application/json
+
+{ "question": "What is the status of sales order 4711?" }
+
+### Mock AI Core scenarios (development only): rate limit, content filter, context length, server error
+POST {{host}}/odata/v4/agent/ask
+Authorization: {{auth}}
+Content-Type: application/json
+
+{ "question": "Trigger a rate limit [[mock:rate_limit]]" }
+
+### Admin service: totals (user ops has the TokenOptimizerAdmin role)
+GET {{host}}/odata/v4/token-optimizer/summary()
+Authorization: Basic ops:
+
+### Admin service: per use case
+GET {{host}}/odata/v4/token-optimizer/UseCases
+Authorization: Basic ops:
+
+### Admin service: savings per step
+GET {{host}}/odata/v4/token-optimizer/StepSavings
+Authorization: Basic ops:

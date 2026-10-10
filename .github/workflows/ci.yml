@@ -1,0 +1,90 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Full Jest suite (unit, integration with the mock AI Core server and the sample CAP app).
+  # Jest can only require() the ESM-only SDK on Node >= 24.9, so it runs on Node 24.
+  test:
+    name: test (node ${{ matrix.node }}, cds ${{ matrix.cds }}, sdk ${{ matrix.sdk }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { node: '24', cds: lockfile, sdk: lockfile, coverage: true }
+          - { node: '24', cds: lockfile, sdk: '2.8.0' }
+          - { node: '24', cds: '9.9.3', sdk: lockfile }
+          - { node: '24', cds: '9.9.3', sdk: '2.8.0' }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+          cache-dependency-path: |
+            cap-ai-token-optimizer/package-lock.json
+            sample-cap-agent/package-lock.json
+      - run: npm ci
+        working-directory: cap-ai-token-optimizer
+      - run: npm ci
+        working-directory: sample-cap-agent
+      - name: Pin versions
+        run: |
+          cap-ai-token-optimizer/scripts/pin-versions.sh cap-ai-token-optimizer ${{ matrix.cds }} ${{ matrix.sdk }}
+          cap-ai-token-optimizer/scripts/pin-versions.sh sample-cap-agent ${{ matrix.cds }} ${{ matrix.sdk }}
+      - run: npm run lint
+        if: matrix.coverage
+        working-directory: cap-ai-token-optimizer
+      - run: npm test
+        working-directory: cap-ai-token-optimizer
+      - run: npm run test:smoke
+        working-directory: cap-ai-token-optimizer
+      - uses: actions/upload-artifact@v4
+        if: matrix.coverage
+        with:
+          name: coverage
+          path: cap-ai-token-optimizer/coverage/lcov.info
+
+  # Runtime check on Node 22 with Node's own test runner: the real SDK, LangChain and the
+  # sample CAP app against the mock server.
+  smoke:
+    name: smoke (node ${{ matrix.node }}, cds ${{ matrix.cds }}, sdk ${{ matrix.sdk }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { node: '22.12.0', cds: lockfile, sdk: lockfile }
+          - { node: '22.12.0', cds: '9.9.3', sdk: '2.8.0' }
+          - { node: '22', cds: lockfile, sdk: lockfile }
+          - { node: '22', cds: '9.9.3', sdk: '2.8.0' }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+          cache-dependency-path: |
+            cap-ai-token-optimizer/package-lock.json
+            sample-cap-agent/package-lock.json
+      - run: npm ci
+        working-directory: cap-ai-token-optimizer
+      - run: npm ci
+        working-directory: sample-cap-agent
+      - name: Pin versions
+        run: |
+          cap-ai-token-optimizer/scripts/pin-versions.sh cap-ai-token-optimizer ${{ matrix.cds }} ${{ matrix.sdk }}
+          cap-ai-token-optimizer/scripts/pin-versions.sh sample-cap-agent ${{ matrix.cds }} ${{ matrix.sdk }}
+      - run: npm run test:smoke
+        working-directory: cap-ai-token-optimizer
