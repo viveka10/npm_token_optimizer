@@ -1,4 +1,4 @@
-# Add @viveka/cap-ai-token-optimizer to an existing CAP app in 5 minutes
+# Add @viveka10/cap-ai-token-optimizer to an existing CAP app in 5 minutes
 
 This guide adds token measurement to a CAP Node.js app that already calls SAP AI Core
 through the SAP Cloud SDK for AI. The first steps change no code and no prompts. You start
@@ -18,7 +18,7 @@ the tree (see [Limits](#limits-of-automatic-instrumentation)).
 ## 2. Install (1 minute)
 
 ```sh
-npm add @viveka/cap-ai-token-optimizer
+npm add @viveka10/cap-ai-token-optimizer
 ```
 
 The package is a CAP plugin, so there's nothing to register.
@@ -73,7 +73,7 @@ Calls found by `autoInstrument` are grouped under the use case `default`. Name t
 your handlers call AI Core, without touching the client code:
 
 ```js
-const { optimizer } = require('@viveka/cap-ai-token-optimizer')
+const { optimizer } = require('@viveka10/cap-ai-token-optimizer')
 
 this.on('summarizeTicket', req =>
   optimizer.withUseCase('ticket-summary', () => summarize(req.data.ID)))

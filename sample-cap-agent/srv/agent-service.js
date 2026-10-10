@@ -1,6 +1,6 @@
 'use strict'
 const cds = require('@sap/cds')
-const { optimizer, classifyError } = require('@viveka/cap-ai-token-optimizer')
+const { optimizer, classifyError } = require('@viveka10/cap-ai-token-optimizer')
 const { SYSTEM, TOOLS, HISTORY } = require('./agent-tools')
 
 const LOG = cds.log('agent')

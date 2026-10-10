@@ -1,4 +1,4 @@
-// Type definitions for @viveka/cap-ai-token-optimizer
+// Type definitions for @viveka10/cap-ai-token-optimizer
 
 export type Mode = 'active' | 'shadow' | 'off'
 

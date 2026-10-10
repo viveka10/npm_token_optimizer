@@ -1,5 +1,5 @@
 /**
- * Read-only statistics of @viveka/cap-ai-token-optimizer for this app instance (in-memory, since
+ * Read-only statistics of @viveka10/cap-ai-token-optimizer for this app instance (in-memory, since
  * start or the last reset). Served at /odata/v4/token-optimizer when
  * cds.requires.tokenOptimizer.admin.enabled is true. The required role is
  * cds.requires.tokenOptimizer.admin.role (default TokenOptimizerAdmin).

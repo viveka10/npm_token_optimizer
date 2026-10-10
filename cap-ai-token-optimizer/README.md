@@ -1,9 +1,9 @@
-# @viveka/cap-ai-token-optimizer
+# @viveka10/cap-ai-token-optimizer
 
-[![npm](https://img.shields.io/npm/v/@viveka/cap-ai-token-optimizer)](https://www.npmjs.com/package/@viveka/cap-ai-token-optimizer)
+[![npm](https://img.shields.io/npm/v/@viveka10/cap-ai-token-optimizer)](https://www.npmjs.com/package/@viveka10/cap-ai-token-optimizer)
 [![CI](https://github.com/viveka10/npm_token_optimizer/actions/workflows/ci.yml/badge.svg)](https://github.com/viveka10/npm_token_optimizer/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/viveka10/npm_token_optimizer/blob/main/cap-ai-token-optimizer/LICENSE)
-![Node](https://img.shields.io/node/v/@viveka/cap-ai-token-optimizer)
+![Node](https://img.shields.io/node/v/@viveka10/cap-ai-token-optimizer)
 
 Reduce, measure and report the tokens your SAP CAP Node.js app spends on SAP AI Core.
 
@@ -41,7 +41,7 @@ See [Compatibility](#compatibility) for the tested versions.
 ## Setup
 
 ```sh
-npm add @viveka/cap-ai-token-optimizer @sap-ai-sdk/orchestration
+npm add @viveka10/cap-ai-token-optimizer @sap-ai-sdk/orchestration
 ```
 
 In a CAP app the package is a CAP plugin: it is loaded automatically, reads
@@ -73,7 +73,7 @@ binding on BTP, `cds bind --exec` locally, or the `AICORE_SERVICE_KEY` environme
 ## Usage
 
 ```js
-const { optimizer } = require('@viveka/cap-ai-token-optimizer')
+const { optimizer } = require('@viveka10/cap-ai-token-optimizer')
 const { OrchestrationClient } = require('@sap-ai-sdk/orchestration')
 
 // Option A: wrap an existing client. Same API as the original.
@@ -101,7 +101,7 @@ Wrap clients once (for example in your service's `init()`) and reuse them.
 - **Errors:** SDK errors are rethrown unchanged. Use `classifyError(err)` to get the failure category.
 
 ```js
-const { classifyError } = require('@viveka/cap-ai-token-optimizer')
+const { classifyError } = require('@viveka10/cap-ai-token-optimizer')
 try { await client.chatCompletion(req) } catch (err) {
   const { category } = classifyError(err)   // e.g. 'RATE_LIMIT'
 }
@@ -416,7 +416,7 @@ Functions and stores can only be set in code. `configure()` replaces the whole c
 
 ```js
 const cds = require('@sap/cds')
-const { optimizer } = require('@viveka/cap-ai-token-optimizer')
+const { optimizer } = require('@viveka10/cap-ai-token-optimizer')
 const base = cds.env.requires.tokenOptimizer
 
 optimizer.configure({
@@ -558,7 +558,7 @@ Writes one row per call to the entity `cap.ai.token_optimizer.TokenUsageLog`
 Query it from your own services, for example:
 
 ```cds
-using { cap.ai.token_optimizer.TokenUsageLog } from '@viveka/cap-ai-token-optimizer/db/token-usage-log';
+using { cap.ai.token_optimizer.TokenUsageLog } from '@viveka10/cap-ai-token-optimizer/db/token-usage-log';
 service ReportingService { @readonly entity AiUsage as projection on TokenUsageLog; }
 ```
 

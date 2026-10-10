@@ -57,8 +57,8 @@ Pre-releases use `-beta.N` (e.g. `0.2.0-beta.1`) and are published with the npm 
 8. The `Release` workflow tests again, checks that the tag matches `package.json` and that
    the CHANGELOG has the version, publishes to npm with provenance, and creates the GitHub
    release from the CHANGELOG section.
-9. Check https://www.npmjs.com/package/@viveka/cap-ai-token-optimizer (version, provenance
-   badge) and install it in a CAP app: `npm add @viveka/cap-ai-token-optimizer@x.y.z`.
+9. Check https://www.npmjs.com/package/@viveka10/cap-ai-token-optimizer (version, provenance
+   badge) and install it in a CAP app: `npm add @viveka10/cap-ai-token-optimizer@x.y.z`.
 
 If a release is broken, publish a fixed patch version. Use `npm deprecate` for the broken
 version rather than `npm unpublish`.

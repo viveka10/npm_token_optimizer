@@ -2,7 +2,7 @@
   "name": "sample-cap-agent",
   "version": "1.0.0",
   "private": true,
-  "description": "Sample CAP app that calls SAP AI Core through @viveka/cap-ai-token-optimizer",
+  "description": "Sample CAP app that calls SAP AI Core through @viveka10/cap-ai-token-optimizer",
   "license": "MIT",
   "engines": {
     "node": ">=22.12"
@@ -15,7 +15,7 @@
   "dependencies": {
     "@sap-ai-sdk/orchestration": "^2.16.0",
     "@sap/cds": "^10.1.1",
-    "@viveka/cap-ai-token-optimizer": "file:../cap-ai-token-optimizer"
+    "@viveka10/cap-ai-token-optimizer": "file:../cap-ai-token-optimizer"
   },
   "devDependencies": {
     "@cap-js/cds-test": "^1.0.2",

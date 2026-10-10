@@ -85,7 +85,7 @@ function createDbExporter (cfg = {}, deps = {}) {
     if (!c) throw new Error('@sap/cds is not loaded')
     db = await c.connect.to('db')
     if (!db.model?.definitions?.[ENTITY] && !c.model?.definitions?.[ENTITY]) {
-      throw new Error(`entity ${ENTITY} is not in the model (is the @viveka/cap-ai-token-optimizer plugin loaded?)`)
+      throw new Error(`entity ${ENTITY} is not in the model (is the @viveka10/cap-ai-token-optimizer plugin loaded?)`)
     }
     return db
   }
