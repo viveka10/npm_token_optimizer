@@ -1,0 +1,79 @@
+{
+  "name": "06-hr-duplicate-system-prompt",
+  "description": "HR assistant where the framework repeats the system prompt and a retried user message (dedupe: messages).",
+  "useCase": "hr-assistant",
+  "model": "gpt-4.1-mini",
+  "params": {
+    "temperature": 0
+  },
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are the HR self-service assistant. You answer questions about leave, working time and payroll based on the company policy excerpts provided. If the policy does not cover a question, refer the employee to their HR business partner."
+    },
+    {
+      "role": "system",
+      "content": "Policy excerpt (Leave, version 2026):\n- Full-time employees receive 30 days of annual leave.\n- Up to 5 unused days can be carried over until 31 March of the following year.\n- Sick leave must be reported before 9:00 on the first day."
+    },
+    {
+      "role": "system",
+      "content": "You are the HR self-service assistant. You answer questions about leave, working time and payroll based on the company policy excerpts provided. If the policy does not cover a question, refer the employee to their HR business partner."
+    },
+    {
+      "role": "user",
+      "content": "How many vacation days do I have per year?"
+    },
+    {
+      "role": "assistant",
+      "content": "As a full-time employee you have 30 days of annual leave."
+    },
+    {
+      "role": "user",
+      "content": "Can I carry over days to next year?"
+    },
+    {
+      "role": "assistant",
+      "content": "Yes, up to 5 days until 31 March of the following year."
+    },
+    {
+      "role": "user",
+      "content": "I was sick yesterday but forgot to report it."
+    },
+    {
+      "role": "assistant",
+      "content": "Please inform your manager and HR today and explain the delay; the policy asks for a report before 9:00 on the first day."
+    },
+    {
+      "role": "user",
+      "content": "Does the carry-over apply to part-time staff?"
+    },
+    {
+      "role": "assistant",
+      "content": "The excerpt only covers full-time employees. Please ask your HR business partner."
+    },
+    {
+      "role": "user",
+      "content": "How do I book half a day?"
+    },
+    {
+      "role": "assistant",
+      "content": "In the \"My Leave Requests\" app, choose the date and set the duration to 4 hours."
+    },
+    {
+      "role": "user",
+      "content": "What happens to my leave when I change teams?"
+    },
+    {
+      "role": "assistant",
+      "content": "Your leave balance stays with you. Your new manager approves future requests."
+    },
+    {
+      "role": "user",
+      "content": "Can I take 10 days in a row in December?"
+    },
+    {
+      "role": "user",
+      "content": "Can I take 10 days in a row in December?"
+    }
+  ]
+}

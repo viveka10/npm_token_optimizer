@@ -1,0 +1,259 @@
+{
+  "name": "02-invoice-long-history",
+  "description": "30-turn accounts payable conversation (history: sliding window).",
+  "useCase": "invoice-agent",
+  "model": "gpt-4.1",
+  "params": {
+    "temperature": 0
+  },
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are an accounts payable assistant for SAP S/4HANA Cloud. Answer briefly and cite document numbers."
+    },
+    {
+      "role": "user",
+      "content": "Is invoice 51056100 posted?"
+    },
+    {
+      "role": "assistant",
+      "content": "Invoice 51056100 is posted in company code 1010 with document number 5100010."
+    },
+    {
+      "role": "user",
+      "content": "What is the due date of 51056101?"
+    },
+    {
+      "role": "assistant",
+      "content": "Invoice 51056101 is due on 2026-10-11."
+    },
+    {
+      "role": "user",
+      "content": "Which purchase order belongs to 51056102?"
+    },
+    {
+      "role": "assistant",
+      "content": "Invoice 51056102 belongs to purchase order 4500001212."
+    },
+    {
+      "role": "user",
+      "content": "Is there a payment block on 51056103?"
+    },
+    {
+      "role": "assistant",
+      "content": "Invoice 51056103 has no payment block."
+    },
+    {
+      "role": "user",
+      "content": "Who approved 51056104?"
+    },
+    {
+      "role": "assistant",
+      "content": "Invoice 51056104 was approved by the AP team lead on 2026-09-14."
+    },
+    {
+      "role": "user",
+      "content": "What is the tax amount of 51056105?"
+    },
+    {
+      "role": "assistant",
+      "content": "The tax amount of invoice 51056105 is 228.00 EUR (19% VAT)."
+    },
+    {
+      "role": "user",
+      "content": "Is invoice 51056106 posted?"
+    },
+    {
+      "role": "assistant",
+      "content": "Invoice 51056106 is posted in company code 1010 with document number 5100016."
+    },
+    {
+      "role": "user",
+      "content": "What is the due date of 51056107?"
+    },
+    {
+      "role": "assistant",
+      "content": "Invoice 51056107 is due on 2026-10-17."
+    },
+    {
+      "role": "user",
+      "content": "Which purchase order belongs to 51056108?"
+    },
+    {
+      "role": "assistant",
+      "content": "Invoice 51056108 belongs to purchase order 4500001218."
+    },
+    {
+      "role": "user",
+      "content": "Is there a payment block on 51056109?"
+    },
+    {
+      "role": "assistant",
+      "content": "Invoice 51056109 has no payment block."
+    },
+    {
+      "role": "user",
+      "content": "Who approved 51056110?"
+    },
+    {
+      "role": "assistant",
+      "content": "Invoice 51056110 was approved by the AP team lead on 2026-09-20."
+    },
+    {
+      "role": "user",
+      "content": "What is the tax amount of 51056111?"
+    },
+    {
+      "role": "assistant",
+      "content": "The tax amount of invoice 51056111 is 273.60 EUR (19% VAT)."
+    },
+    {
+      "role": "user",
+      "content": "Is invoice 51056112 posted?"
+    },
+    {
+      "role": "assistant",
+      "content": "Invoice 51056112 is posted in company code 1010 with document number 5100022."
+    },
+    {
+      "role": "user",
+      "content": "What is the due date of 51056113?"
+    },
+    {
+      "role": "assistant",
+      "content": "Invoice 51056113 is due on 2026-10-23."
+    },
+    {
+      "role": "user",
+      "content": "Which purchase order belongs to 51056114?"
+    },
+    {
+      "role": "assistant",
+      "content": "Invoice 51056114 belongs to purchase order 4500001224."
+    },
+    {
+      "role": "user",
+      "content": "Is there a payment block on 51056115?"
+    },
+    {
+      "role": "assistant",
+      "content": "Invoice 51056115 has no payment block."
+    },
+    {
+      "role": "user",
+      "content": "Who approved 51056116?"
+    },
+    {
+      "role": "assistant",
+      "content": "Invoice 51056116 was approved by the AP team lead on 2026-09-26."
+    },
+    {
+      "role": "user",
+      "content": "What is the tax amount of 51056117?"
+    },
+    {
+      "role": "assistant",
+      "content": "The tax amount of invoice 51056117 is 319.20 EUR (19% VAT)."
+    },
+    {
+      "role": "user",
+      "content": "Is invoice 51056118 posted?"
+    },
+    {
+      "role": "assistant",
+      "content": "Invoice 51056118 is posted in company code 1010 with document number 5100028."
+    },
+    {
+      "role": "user",
+      "content": "What is the due date of 51056119?"
+    },
+    {
+      "role": "assistant",
+      "content": "Invoice 51056119 is due on 2026-10-11."
+    },
+    {
+      "role": "user",
+      "content": "Which purchase order belongs to 51056120?"
+    },
+    {
+      "role": "assistant",
+      "content": "Invoice 51056120 belongs to purchase order 4500001230."
+    },
+    {
+      "role": "user",
+      "content": "Is there a payment block on 51056121?"
+    },
+    {
+      "role": "assistant",
+      "content": "Invoice 51056121 has no payment block."
+    },
+    {
+      "role": "user",
+      "content": "Who approved 51056122?"
+    },
+    {
+      "role": "assistant",
+      "content": "Invoice 51056122 was approved by the AP team lead on 2026-09-14."
+    },
+    {
+      "role": "user",
+      "content": "What is the tax amount of 51056123?"
+    },
+    {
+      "role": "assistant",
+      "content": "The tax amount of invoice 51056123 is 364.80 EUR (19% VAT)."
+    },
+    {
+      "role": "user",
+      "content": "Is invoice 51056124 posted?"
+    },
+    {
+      "role": "assistant",
+      "content": "Invoice 51056124 is posted in company code 1010 with document number 5100034."
+    },
+    {
+      "role": "user",
+      "content": "What is the due date of 51056125?"
+    },
+    {
+      "role": "assistant",
+      "content": "Invoice 51056125 is due on 2026-10-17."
+    },
+    {
+      "role": "user",
+      "content": "Which purchase order belongs to 51056126?"
+    },
+    {
+      "role": "assistant",
+      "content": "Invoice 51056126 belongs to purchase order 4500001236."
+    },
+    {
+      "role": "user",
+      "content": "Is there a payment block on 51056127?"
+    },
+    {
+      "role": "assistant",
+      "content": "Invoice 51056127 has no payment block."
+    },
+    {
+      "role": "user",
+      "content": "Who approved 51056128?"
+    },
+    {
+      "role": "assistant",
+      "content": "Invoice 51056128 was approved by the AP team lead on 2026-09-20."
+    },
+    {
+      "role": "user",
+      "content": "What is the tax amount of 51056129?"
+    },
+    {
+      "role": "assistant",
+      "content": "The tax amount of invoice 51056129 is 410.40 EUR (19% VAT)."
+    },
+    {
+      "role": "user",
+      "content": "Summarize which of the invoices we discussed are due this month."
+    }
+  ]
+}

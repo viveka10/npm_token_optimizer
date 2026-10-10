@@ -1,0 +1,237 @@
+{
+  "name": "05-travel-expense-tool-results",
+  "description": "Travel expense agent with pretty-printed JSON tool results (normalize: JSON in tool messages).",
+  "useCase": "travel-agent",
+  "model": "gpt-4.1",
+  "params": {
+    "temperature": 0
+  },
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a travel expense assistant. Check receipts against the company travel policy and per diem rates."
+    },
+    {
+      "role": "user",
+      "content": "Please review the receipts of trip T-1001."
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "tool_calls": [
+        {
+          "id": "call_7",
+          "type": "function",
+          "function": {
+            "name": "list_receipts",
+            "arguments": "{\n  \"tripId\": \"T-1001\"\n}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_7",
+      "content": "{\n  \"tripId\": \"T-1001\",\n  \"receipts\": [\n    {\n      \"id\": \"T-1001-R1\",\n      \"type\": \"Hotel\",\n      \"date\": \"2026-09-10\",\n      \"amount\": 20,\n      \"currency\": \"EUR\",\n      \"vat\": 0.19\n    },\n    {\n      \"id\": \"T-1001-R2\",\n      \"type\": \"Taxi\",\n      \"date\": \"2026-09-11\",\n      \"amount\": 57.35,\n      \"currency\": \"EUR\",\n      \"vat\": 0.19\n    },\n    {\n      \"id\": \"T-1001-R3\",\n      \"type\": \"Meal\",\n      \"date\": \"2026-09-12\",\n      \"amount\": 94.7,\n      \"currency\": \"CHF\",\n      \"vat\": 0.19\n    },\n    {\n      \"id\": \"T-1001-R4\",\n      \"type\": \"Train\",\n      \"date\": \"2026-09-13\",\n      \"amount\": 132.05,\n      \"currency\": \"EUR\",\n      \"vat\": 0.19\n    },\n    {\n      \"id\": \"T-1001-R5\",\n      \"type\": \"Parking\",\n      \"date\": \"2026-09-14\",\n      \"amount\": 169.4,\n      \"currency\": \"EUR\",\n      \"vat\": 0.19\n    },\n    {\n      \"id\": \"T-1001-R6\",\n      \"type\": \"Meal\",\n      \"date\": \"2026-09-15\",\n      \"amount\": 206.75,\n      \"currency\": \"CHF\",\n      \"vat\": 0.19\n    }\n  ]\n}"
+    },
+    {
+      "role": "assistant",
+      "content": "Trip T-1001: all receipts comply with the policy."
+    },
+    {
+      "role": "user",
+      "content": "Please review the receipts of trip T-1002."
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "tool_calls": [
+        {
+          "id": "call_8",
+          "type": "function",
+          "function": {
+            "name": "list_receipts",
+            "arguments": "{\n  \"tripId\": \"T-1002\"\n}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_8",
+      "content": "{\n  \"tripId\": \"T-1002\",\n  \"receipts\": [\n    {\n      \"id\": \"T-1002-R1\",\n      \"type\": \"Hotel\",\n      \"date\": \"2026-09-11\",\n      \"amount\": 25,\n      \"currency\": \"EUR\",\n      \"vat\": 0.19\n    },\n    {\n      \"id\": \"T-1002-R2\",\n      \"type\": \"Taxi\",\n      \"date\": \"2026-09-12\",\n      \"amount\": 62.35,\n      \"currency\": \"CHF\",\n      \"vat\": 0.19\n    },\n    {\n      \"id\": \"T-1002-R3\",\n      \"type\": \"Meal\",\n      \"date\": \"2026-09-13\",\n      \"amount\": 99.7,\n      \"currency\": \"EUR\",\n      \"vat\": 0.19\n    },\n    {\n      \"id\": \"T-1002-R4\",\n      \"type\": \"Train\",\n      \"date\": \"2026-09-14\",\n      \"amount\": 137.05,\n      \"currency\": \"EUR\",\n      \"vat\": 0.19\n    },\n    {\n      \"id\": \"T-1002-R5\",\n      \"type\": \"Parking\",\n      \"date\": \"2026-09-15\",\n      \"amount\": 174.4,\n      \"currency\": \"CHF\",\n      \"vat\": 0.19\n    },\n    {\n      \"id\": \"T-1002-R6\",\n      \"type\": \"Meal\",\n      \"date\": \"2026-09-16\",\n      \"amount\": 211.75,\n      \"currency\": \"EUR\",\n      \"vat\": 0.19\n    }\n  ]\n}"
+    },
+    {
+      "role": "assistant",
+      "content": "Trip T-1002: the hotel exceeds the city limit by 23.00 EUR."
+    },
+    {
+      "role": "user",
+      "content": "Please review the receipts of trip T-1003."
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "tool_calls": [
+        {
+          "id": "call_9",
+          "type": "function",
+          "function": {
+            "name": "list_receipts",
+            "arguments": "{\n  \"tripId\": \"T-1003\"\n}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_9",
+      "content": "{\n  \"tripId\": \"T-1003\",\n  \"receipts\": [\n    {\n      \"id\": \"T-1003-R1\",\n      \"type\": \"Hotel\",\n      \"date\": \"2026-09-12\",\n      \"amount\": 30,\n      \"currency\": \"CHF\",\n      \"vat\": 0.19\n    },\n    {\n      \"id\": \"T-1003-R2\",\n      \"type\": \"Taxi\",\n      \"date\": \"2026-09-13\",\n      \"amount\": 67.35,\n      \"currency\": \"EUR\",\n      \"vat\": 0.19\n    },\n    {\n      \"id\": \"T-1003-R3\",\n      \"type\": \"Meal\",\n      \"date\": \"2026-09-14\",\n      \"amount\": 104.7,\n      \"currency\": \"EUR\",\n      \"vat\": 0.19\n    },\n    {\n      \"id\": \"T-1003-R4\",\n      \"type\": \"Train\",\n      \"date\": \"2026-09-15\",\n      \"amount\": 142.05,\n      \"currency\": \"CHF\",\n      \"vat\": 0.19\n    },\n    {\n      \"id\": \"T-1003-R5\",\n      \"type\": \"Parking\",\n      \"date\": \"2026-09-16\",\n      \"amount\": 179.4,\n      \"currency\": \"EUR\",\n      \"vat\": 0.19\n    },\n    {\n      \"id\": \"T-1003-R6\",\n      \"type\": \"Meal\",\n      \"date\": \"2026-09-17\",\n      \"amount\": 216.75,\n      \"currency\": \"EUR\",\n      \"vat\": 0.19\n    }\n  ]\n}"
+    },
+    {
+      "role": "assistant",
+      "content": "Trip T-1003: one meal receipt is missing a VAT number."
+    },
+    {
+      "role": "user",
+      "content": "Please review the receipts of trip T-1004."
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "tool_calls": [
+        {
+          "id": "call_10",
+          "type": "function",
+          "function": {
+            "name": "list_receipts",
+            "arguments": "{\n  \"tripId\": \"T-1004\"\n}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_10",
+      "content": "{\n  \"tripId\": \"T-1004\",\n  \"receipts\": [\n    {\n      \"id\": \"T-1004-R1\",\n      \"type\": \"Hotel\",\n      \"date\": \"2026-09-13\",\n      \"amount\": 35,\n      \"currency\": \"EUR\",\n      \"vat\": 0.19\n    },\n    {\n      \"id\": \"T-1004-R2\",\n      \"type\": \"Taxi\",\n      \"date\": \"2026-09-14\",\n      \"amount\": 72.35,\n      \"currency\": \"EUR\",\n      \"vat\": 0.19\n    },\n    {\n      \"id\": \"T-1004-R3\",\n      \"type\": \"Meal\",\n      \"date\": \"2026-09-15\",\n      \"amount\": 109.7,\n      \"currency\": \"CHF\",\n      \"vat\": 0.19\n    },\n    {\n      \"id\": \"T-1004-R4\",\n      \"type\": \"Train\",\n      \"date\": \"2026-09-16\",\n      \"amount\": 147.05,\n      \"currency\": \"EUR\",\n      \"vat\": 0.19\n    },\n    {\n      \"id\": \"T-1004-R5\",\n      \"type\": \"Parking\",\n      \"date\": \"2026-09-17\",\n      \"amount\": 184.4,\n      \"currency\": \"EUR\",\n      \"vat\": 0.19\n    },\n    {\n      \"id\": \"T-1004-R6\",\n      \"type\": \"Meal\",\n      \"date\": \"2026-09-18\",\n      \"amount\": 221.75,\n      \"currency\": \"CHF\",\n      \"vat\": 0.19\n    }\n  ]\n}"
+    },
+    {
+      "role": "assistant",
+      "content": "Trip T-1004: all receipts comply with the policy."
+    },
+    {
+      "role": "user",
+      "content": "Please review the receipts of trip T-1005."
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "tool_calls": [
+        {
+          "id": "call_11",
+          "type": "function",
+          "function": {
+            "name": "list_receipts",
+            "arguments": "{\n  \"tripId\": \"T-1005\"\n}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_11",
+      "content": "{\n  \"tripId\": \"T-1005\",\n  \"receipts\": [\n    {\n      \"id\": \"T-1005-R1\",\n      \"type\": \"Hotel\",\n      \"date\": \"2026-09-14\",\n      \"amount\": 40,\n      \"currency\": \"EUR\",\n      \"vat\": 0.19\n    },\n    {\n      \"id\": \"T-1005-R2\",\n      \"type\": \"Taxi\",\n      \"date\": \"2026-09-15\",\n      \"amount\": 77.35,\n      \"currency\": \"CHF\",\n      \"vat\": 0.19\n    },\n    {\n      \"id\": \"T-1005-R3\",\n      \"type\": \"Meal\",\n      \"date\": \"2026-09-16\",\n      \"amount\": 114.7,\n      \"currency\": \"EUR\",\n      \"vat\": 0.19\n    },\n    {\n      \"id\": \"T-1005-R4\",\n      \"type\": \"Train\",\n      \"date\": \"2026-09-17\",\n      \"amount\": 152.05,\n      \"currency\": \"EUR\",\n      \"vat\": 0.19\n    },\n    {\n      \"id\": \"T-1005-R5\",\n      \"type\": \"Parking\",\n      \"date\": \"2026-09-18\",\n      \"amount\": 189.4,\n      \"currency\": \"CHF\",\n      \"vat\": 0.19\n    },\n    {\n      \"id\": \"T-1005-R6\",\n      \"type\": \"Meal\",\n      \"date\": \"2026-09-19\",\n      \"amount\": 226.75,\n      \"currency\": \"EUR\",\n      \"vat\": 0.19\n    }\n  ]\n}"
+    },
+    {
+      "role": "assistant",
+      "content": "Trip T-1005: the hotel exceeds the city limit by 23.00 EUR."
+    },
+    {
+      "role": "user",
+      "content": "Which of these trips can I submit right away?"
+    }
+  ],
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "get_trip",
+        "description": "Read a business trip with dates, destination and cost assignment.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "tripId": {
+              "type": "string",
+              "description": "Trip number"
+            }
+          },
+          "required": [
+            "tripId"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "list_receipts",
+        "description": "List receipts attached to a trip.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "tripId": {
+              "type": "string",
+              "description": "Trip number"
+            }
+          },
+          "required": [
+            "tripId"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "get_per_diem_rates",
+        "description": "Read per diem rates for a country and date.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "country": {
+              "type": "string",
+              "description": "ISO country code"
+            },
+            "date": {
+              "type": "string",
+              "description": "Date"
+            }
+          },
+          "required": [
+            "country",
+            "date"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "submit_expense_report",
+        "description": "Submit the expense report for approval. Requires confirmation.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "tripId": {
+              "type": "string",
+              "description": "Trip number"
+            }
+          },
+          "required": [
+            "tripId"
+          ]
+        }
+      }
+    }
+  ]
+}

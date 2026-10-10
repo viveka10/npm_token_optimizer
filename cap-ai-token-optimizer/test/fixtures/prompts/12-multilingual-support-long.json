@@ -1,0 +1,219 @@
+{
+  "name": "12-multilingual-support-long",
+  "description": "25-turn German/English support chat with repeated instruction blocks (dedupe + history).",
+  "useCase": "support",
+  "model": "gpt-4.1-mini",
+  "params": {
+    "temperature": 0.2
+  },
+  "messages": [
+    {
+      "role": "system",
+      "content": "Du bist der Support-Assistent eines Softwareherstellers.\n\nAntworte immer in der Sprache des Kunden. Nenne keine internen Ticketnummern. Verweise bei Vertragsfragen an den Vertrieb."
+    },
+    {
+      "role": "user",
+      "content": "Wie ändere ich die Lieferadresse in meinem Konto? (1)\n\nAntworte immer in der Sprache des Kunden. Nenne keine internen Ticketnummern. Verweise bei Vertragsfragen an den Vertrieb."
+    },
+    {
+      "role": "assistant",
+      "content": "Unter \"Mein Konto\" > \"Adressen\" können Sie die Lieferadresse ändern."
+    },
+    {
+      "role": "user",
+      "content": "How do I download my invoices? (2)\n\nAntworte immer in der Sprache des Kunden. Nenne keine internen Ticketnummern. Verweise bei Vertragsfragen an den Vertrieb."
+    },
+    {
+      "role": "assistant",
+      "content": "Go to \"Billing\" > \"Invoices\" and click the download icon next to each invoice."
+    },
+    {
+      "role": "user",
+      "content": "Kann ich mein Abonnement pausieren? (3)\n\nAntworte immer in der Sprache des Kunden. Nenne keine internen Ticketnummern. Verweise bei Vertragsfragen an den Vertrieb."
+    },
+    {
+      "role": "assistant",
+      "content": "Für Vertragsänderungen wenden Sie sich bitte an den Vertrieb."
+    },
+    {
+      "role": "user",
+      "content": "The app shows error 503 since this morning. (4)\n\nAntworte immer in der Sprache des Kunden. Nenne keine internen Ticketnummern. Verweise bei Vertragsfragen an den Vertrieb."
+    },
+    {
+      "role": "assistant",
+      "content": "We are aware of a service disruption and are working on it. Please try again in 30 minutes."
+    },
+    {
+      "role": "user",
+      "content": "Gibt es eine API für Bestellungen? (5)\n\nAntworte immer in der Sprache des Kunden. Nenne keine internen Ticketnummern. Verweise bei Vertragsfragen an den Vertrieb."
+    },
+    {
+      "role": "assistant",
+      "content": "Ja, die REST-API ist im Entwicklerportal dokumentiert."
+    },
+    {
+      "role": "user",
+      "content": "Wie ändere ich die Lieferadresse in meinem Konto? (6)\n\nAntworte immer in der Sprache des Kunden. Nenne keine internen Ticketnummern. Verweise bei Vertragsfragen an den Vertrieb."
+    },
+    {
+      "role": "assistant",
+      "content": "Unter \"Mein Konto\" > \"Adressen\" können Sie die Lieferadresse ändern."
+    },
+    {
+      "role": "user",
+      "content": "How do I download my invoices? (7)\n\nAntworte immer in der Sprache des Kunden. Nenne keine internen Ticketnummern. Verweise bei Vertragsfragen an den Vertrieb."
+    },
+    {
+      "role": "assistant",
+      "content": "Go to \"Billing\" > \"Invoices\" and click the download icon next to each invoice."
+    },
+    {
+      "role": "user",
+      "content": "Kann ich mein Abonnement pausieren? (8)\n\nAntworte immer in der Sprache des Kunden. Nenne keine internen Ticketnummern. Verweise bei Vertragsfragen an den Vertrieb."
+    },
+    {
+      "role": "assistant",
+      "content": "Für Vertragsänderungen wenden Sie sich bitte an den Vertrieb."
+    },
+    {
+      "role": "user",
+      "content": "The app shows error 503 since this morning. (9)\n\nAntworte immer in der Sprache des Kunden. Nenne keine internen Ticketnummern. Verweise bei Vertragsfragen an den Vertrieb."
+    },
+    {
+      "role": "assistant",
+      "content": "We are aware of a service disruption and are working on it. Please try again in 30 minutes."
+    },
+    {
+      "role": "user",
+      "content": "Gibt es eine API für Bestellungen? (10)\n\nAntworte immer in der Sprache des Kunden. Nenne keine internen Ticketnummern. Verweise bei Vertragsfragen an den Vertrieb."
+    },
+    {
+      "role": "assistant",
+      "content": "Ja, die REST-API ist im Entwicklerportal dokumentiert."
+    },
+    {
+      "role": "user",
+      "content": "Wie ändere ich die Lieferadresse in meinem Konto? (11)\n\nAntworte immer in der Sprache des Kunden. Nenne keine internen Ticketnummern. Verweise bei Vertragsfragen an den Vertrieb."
+    },
+    {
+      "role": "assistant",
+      "content": "Unter \"Mein Konto\" > \"Adressen\" können Sie die Lieferadresse ändern."
+    },
+    {
+      "role": "user",
+      "content": "How do I download my invoices? (12)\n\nAntworte immer in der Sprache des Kunden. Nenne keine internen Ticketnummern. Verweise bei Vertragsfragen an den Vertrieb."
+    },
+    {
+      "role": "assistant",
+      "content": "Go to \"Billing\" > \"Invoices\" and click the download icon next to each invoice."
+    },
+    {
+      "role": "user",
+      "content": "Kann ich mein Abonnement pausieren? (13)\n\nAntworte immer in der Sprache des Kunden. Nenne keine internen Ticketnummern. Verweise bei Vertragsfragen an den Vertrieb."
+    },
+    {
+      "role": "assistant",
+      "content": "Für Vertragsänderungen wenden Sie sich bitte an den Vertrieb."
+    },
+    {
+      "role": "user",
+      "content": "The app shows error 503 since this morning. (14)\n\nAntworte immer in der Sprache des Kunden. Nenne keine internen Ticketnummern. Verweise bei Vertragsfragen an den Vertrieb."
+    },
+    {
+      "role": "assistant",
+      "content": "We are aware of a service disruption and are working on it. Please try again in 30 minutes."
+    },
+    {
+      "role": "user",
+      "content": "Gibt es eine API für Bestellungen? (15)\n\nAntworte immer in der Sprache des Kunden. Nenne keine internen Ticketnummern. Verweise bei Vertragsfragen an den Vertrieb."
+    },
+    {
+      "role": "assistant",
+      "content": "Ja, die REST-API ist im Entwicklerportal dokumentiert."
+    },
+    {
+      "role": "user",
+      "content": "Wie ändere ich die Lieferadresse in meinem Konto? (16)\n\nAntworte immer in der Sprache des Kunden. Nenne keine internen Ticketnummern. Verweise bei Vertragsfragen an den Vertrieb."
+    },
+    {
+      "role": "assistant",
+      "content": "Unter \"Mein Konto\" > \"Adressen\" können Sie die Lieferadresse ändern."
+    },
+    {
+      "role": "user",
+      "content": "How do I download my invoices? (17)\n\nAntworte immer in der Sprache des Kunden. Nenne keine internen Ticketnummern. Verweise bei Vertragsfragen an den Vertrieb."
+    },
+    {
+      "role": "assistant",
+      "content": "Go to \"Billing\" > \"Invoices\" and click the download icon next to each invoice."
+    },
+    {
+      "role": "user",
+      "content": "Kann ich mein Abonnement pausieren? (18)\n\nAntworte immer in der Sprache des Kunden. Nenne keine internen Ticketnummern. Verweise bei Vertragsfragen an den Vertrieb."
+    },
+    {
+      "role": "assistant",
+      "content": "Für Vertragsänderungen wenden Sie sich bitte an den Vertrieb."
+    },
+    {
+      "role": "user",
+      "content": "The app shows error 503 since this morning. (19)\n\nAntworte immer in der Sprache des Kunden. Nenne keine internen Ticketnummern. Verweise bei Vertragsfragen an den Vertrieb."
+    },
+    {
+      "role": "assistant",
+      "content": "We are aware of a service disruption and are working on it. Please try again in 30 minutes."
+    },
+    {
+      "role": "user",
+      "content": "Gibt es eine API für Bestellungen? (20)\n\nAntworte immer in der Sprache des Kunden. Nenne keine internen Ticketnummern. Verweise bei Vertragsfragen an den Vertrieb."
+    },
+    {
+      "role": "assistant",
+      "content": "Ja, die REST-API ist im Entwicklerportal dokumentiert."
+    },
+    {
+      "role": "user",
+      "content": "Wie ändere ich die Lieferadresse in meinem Konto? (21)\n\nAntworte immer in der Sprache des Kunden. Nenne keine internen Ticketnummern. Verweise bei Vertragsfragen an den Vertrieb."
+    },
+    {
+      "role": "assistant",
+      "content": "Unter \"Mein Konto\" > \"Adressen\" können Sie die Lieferadresse ändern."
+    },
+    {
+      "role": "user",
+      "content": "How do I download my invoices? (22)\n\nAntworte immer in der Sprache des Kunden. Nenne keine internen Ticketnummern. Verweise bei Vertragsfragen an den Vertrieb."
+    },
+    {
+      "role": "assistant",
+      "content": "Go to \"Billing\" > \"Invoices\" and click the download icon next to each invoice."
+    },
+    {
+      "role": "user",
+      "content": "Kann ich mein Abonnement pausieren? (23)\n\nAntworte immer in der Sprache des Kunden. Nenne keine internen Ticketnummern. Verweise bei Vertragsfragen an den Vertrieb."
+    },
+    {
+      "role": "assistant",
+      "content": "Für Vertragsänderungen wenden Sie sich bitte an den Vertrieb."
+    },
+    {
+      "role": "user",
+      "content": "The app shows error 503 since this morning. (24)\n\nAntworte immer in der Sprache des Kunden. Nenne keine internen Ticketnummern. Verweise bei Vertragsfragen an den Vertrieb."
+    },
+    {
+      "role": "assistant",
+      "content": "We are aware of a service disruption and are working on it. Please try again in 30 minutes."
+    },
+    {
+      "role": "user",
+      "content": "Gibt es eine API für Bestellungen? (25)\n\nAntworte immer in der Sprache des Kunden. Nenne keine internen Ticketnummern. Verweise bei Vertragsfragen an den Vertrieb."
+    },
+    {
+      "role": "assistant",
+      "content": "Ja, die REST-API ist im Entwicklerportal dokumentiert."
+    },
+    {
+      "role": "user",
+      "content": "Wie lange dauert eine Rückerstattung?\n\nAntworte immer in der Sprache des Kunden. Nenne keine internen Ticketnummern. Verweise bei Vertragsfragen an den Vertrieb."
+    }
+  ]
+}

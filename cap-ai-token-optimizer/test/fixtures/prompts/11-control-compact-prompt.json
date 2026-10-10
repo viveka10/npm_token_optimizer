@@ -1,0 +1,20 @@
+{
+  "name": "11-control-compact-prompt",
+  "description": "Already compact single question; expected savings close to zero (control case).",
+  "useCase": "faq",
+  "model": "gpt-4.1-mini",
+  "params": {
+    "temperature": 0,
+    "max_tokens": 200
+  },
+  "messages": [
+    {
+      "role": "system",
+      "content": "Answer in one sentence."
+    },
+    {
+      "role": "user",
+      "content": "What does SAP BTP stand for?"
+    }
+  ]
+}

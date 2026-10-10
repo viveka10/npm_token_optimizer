@@ -1,0 +1,104 @@
+name: Release
+
+# Publishes @viveka/cap-ai-token-optimizer to npm when a version tag (v1.2.3, v1.2.3-beta.1) is pushed.
+#
+# Authentication:
+#  - npm trusted publishing (OIDC) once it is configured for this workflow on npmjs.com.
+#    No token is needed, and npm adds provenance automatically.
+#  - For the very first release (trusted publishing can only be configured for a package that
+#    already exists), set the repository secret NPM_TOKEN to a short-lived granular token.
+#    The workflow then publishes with that token and --provenance. Delete the secret afterwards.
+
+on:
+  push:
+    tags: ['v*.*.*']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+defaults:
+  run:
+    working-directory: cap-ai-token-optimizer
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: npm-publish
+    permissions:
+      contents: read
+      id-token: write   # OIDC for trusted publishing and provenance
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'   # ships npm >= 11.5.1, needed for trusted publishing
+          registry-url: 'https://registry.npmjs.org'
+          cache: npm
+          cache-dependency-path: |
+            cap-ai-token-optimizer/package-lock.json
+            sample-cap-agent/package-lock.json
+
+      - name: Check tag, version and CHANGELOG
+        id: version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          if [ "v$VERSION" != "$GITHUB_REF_NAME" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME does not match package.json version $VERSION"; exit 1
+          fi
+          if ! grep -q "^## \[$VERSION\]" CHANGELOG.md; then
+            echo "::error::CHANGELOG.md has no section '## [$VERSION]'"; exit 1
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "npm $(npm --version), node $(node --version)"
+
+      - run: npm ci
+      - run: npm ci
+        working-directory: sample-cap-agent
+      - run: npm run lint
+      - run: npm test
+      - run: npm run test:smoke
+      - run: npm run check:pack
+
+      - name: Publish to npm
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          ARGS=()
+          # pre-releases (1.2.3-beta.1) go to the "next" dist-tag, not "latest"
+          case "$VERSION" in *-*) ARGS+=(--tag next) ;; esac
+          if [ -n "$NODE_AUTH_TOKEN" ]; then
+            echo "Publishing with NPM_TOKEN (first release). Remove the secret once trusted publishing is configured."
+            ARGS+=(--provenance)
+          else
+            echo "Publishing with npm trusted publishing (OIDC)"
+          fi
+          npm publish "${ARGS[@]}"
+
+  github-release:
+    needs: publish
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create GitHub release from the CHANGELOG section
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ needs.publish.outputs.version }}
+        run: |
+          awk -v v="$VERSION" '
+            $0 ~ "^## \\[" v "\\]" { on = 1; next }
+            on && /^## \[/ { exit }
+            on { print }
+          ' CHANGELOG.md > notes.md
+          PRERELEASE=$([[ "$VERSION" == *-* ]] && echo "--prerelease" || echo "")
+          gh release create "$GITHUB_REF_NAME" --title "v$VERSION" --notes-file notes.md $PRERELEASE
+        working-directory: cap-ai-token-optimizer

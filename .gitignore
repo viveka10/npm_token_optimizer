@@ -1,0 +1,7 @@
+node_modules/
+coverage/
+.env
+.env.*
+default-env.json
+.cdsrc-private.json
+*.tgz

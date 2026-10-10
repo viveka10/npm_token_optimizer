@@ -1,0 +1,8 @@
+node_modules/
+coverage/
+bench/results/
+.env
+.env.*
+default-env.json
+.cdsrc-private.json
+*.service-key.json

@@ -1,0 +1,19 @@
+{
+  "name": "08-code-review-code-blocks",
+  "description": "Code review request: prose with messy whitespace around ABAP and JavaScript code blocks (normalize must not touch code).",
+  "useCase": "dev-assistant",
+  "model": "gpt-4.1",
+  "params": {
+    "temperature": 0
+  },
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a senior SAP developer reviewing ABAP and CAP code.   Point out bugs first, then style.\n\n\n\nKeep the review short."
+    },
+    {
+      "role": "user",
+      "content": "Please    review   this ABAP class:\n\n```abap\nCLASS zcl_invoice_check DEFINITION PUBLIC FINAL CREATE PUBLIC.\n  PUBLIC SECTION.\n    METHODS check\n      IMPORTING iv_invoice TYPE string\n      RETURNING VALUE(rv_ok) TYPE abap_bool.\nENDCLASS.\n\nCLASS zcl_invoice_check IMPLEMENTATION.\n  METHOD check.\n    SELECT SINGLE @abap_true\n      FROM i_supplierinvoiceapi01\n      WHERE supplierinvoice = @iv_invoice\n      INTO @rv_ok.\n\n\n  ENDMETHOD.\nENDCLASS.\n```\n\n\n\nAnd   this CAP handler:\n\n```js\nmodule.exports = async function (srv) {\n  srv.on('check',   async (req) => {\n    const { invoice } = req.data\n\n\n    return  await srv.run(SELECT.one.from('Invoices').where({ ID: invoice }))\n  })\n}\n```\n\n\n\nThanks   a lot!   "
+    }
+  ]
+}

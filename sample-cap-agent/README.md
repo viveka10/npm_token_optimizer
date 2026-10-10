@@ -1,6 +1,6 @@
 # sample-cap-agent
 
-A small CAP app that calls SAP AI Core through [cap-ai-token-optimizer](../cap-ai-token-optimizer).
+A small CAP app that calls SAP AI Core through [@viveka/cap-ai-token-optimizer](../cap-ai-token-optimizer).
 
 - `ask(question)`: one AI Core call (use case `ask`, output capped at 256 tokens).
 - `runAgent(question)`: an MCP-style order-to-cash agent with 32 tool definitions and a
@@ -18,7 +18,7 @@ npm install
 npm run watch        # or: npm start
 ```
 
-The `[development]` profile starts the mock AI Core server from `cap-ai-token-optimizer`
+The `[development]` profile starts the mock AI Core server from `@viveka/cap-ai-token-optimizer`
 (available through the local `file:` dependency only). Then use `http/requests.http`.
 The mocked user `alice` has no password.
 

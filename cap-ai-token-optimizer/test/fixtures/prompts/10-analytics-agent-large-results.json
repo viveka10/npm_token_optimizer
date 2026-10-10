@@ -1,0 +1,478 @@
+{
+  "name": "10-analytics-agent-large-results",
+  "description": "Analytics agent, 15 tool-calling turns with large JSON tables (normalize + history).",
+  "useCase": "analytics-agent",
+  "model": "gpt-4.1",
+  "params": {
+    "temperature": 0
+  },
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a sales analytics assistant. Use run_query for numbers and explain results in one or two sentences."
+    },
+    {
+      "role": "user",
+      "content": "Revenue by product line for EMEA in Q1 2026?"
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "tool_calls": [
+        {
+          "id": "call_16",
+          "type": "function",
+          "function": {
+            "name": "run_query",
+            "arguments": "{\n  \"measures\": [\n    \"NetRevenue\",\n    \"Quantity\"\n  ],\n  \"dimensions\": [\n    \"ProductLine\"\n  ],\n  \"filter\": \"Region eq 'EMEA' and Quarter eq '2026-Q1'\"\n}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_16",
+      "content": "{\n  \"rows\": [\n    {\n      \"ProductLine\": \"Pumps\",\n      \"NetRevenue\": 128833,\n      \"Quantity\": 235,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Valves\",\n      \"NetRevenue\": 132952,\n      \"Quantity\": 272,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Motors\",\n      \"NetRevenue\": 137071,\n      \"Quantity\": 309,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Sensors\",\n      \"NetRevenue\": 141190,\n      \"Quantity\": 346,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Controllers\",\n      \"NetRevenue\": 145309,\n      \"Quantity\": 383,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Services\",\n      \"NetRevenue\": 149428,\n      \"Quantity\": 420,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Spare Parts\",\n      \"NetRevenue\": 153547,\n      \"Quantity\": 457,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Software\",\n      \"NetRevenue\": 157666,\n      \"Quantity\": 494,\n      \"Currency\": \"EUR\"\n    }\n  ]\n}"
+    },
+    {
+      "role": "assistant",
+      "content": "In EMEA, Pumps had the highest revenue in Q1."
+    },
+    {
+      "role": "user",
+      "content": "Revenue by product line for APJ in Q2 2026?"
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "tool_calls": [
+        {
+          "id": "call_17",
+          "type": "function",
+          "function": {
+            "name": "run_query",
+            "arguments": "{\n  \"measures\": [\n    \"NetRevenue\",\n    \"Quantity\"\n  ],\n  \"dimensions\": [\n    \"ProductLine\"\n  ],\n  \"filter\": \"Region eq 'APJ' and Quarter eq '2026-Q2'\"\n}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_17",
+      "content": "{\n  \"rows\": [\n    {\n      \"ProductLine\": \"Pumps\",\n      \"NetRevenue\": 138444,\n      \"Quantity\": 420,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Valves\",\n      \"NetRevenue\": 143936,\n      \"Quantity\": 494,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Motors\",\n      \"NetRevenue\": 149428,\n      \"Quantity\": 568,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Sensors\",\n      \"NetRevenue\": 154920,\n      \"Quantity\": 642,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Controllers\",\n      \"NetRevenue\": 160412,\n      \"Quantity\": 716,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Services\",\n      \"NetRevenue\": 165904,\n      \"Quantity\": 790,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Spare Parts\",\n      \"NetRevenue\": 171396,\n      \"Quantity\": 864,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Software\",\n      \"NetRevenue\": 176888,\n      \"Quantity\": 938,\n      \"Currency\": \"EUR\"\n    }\n  ]\n}"
+    },
+    {
+      "role": "assistant",
+      "content": "In APJ, Motors had the highest revenue in Q2."
+    },
+    {
+      "role": "user",
+      "content": "Revenue by product line for NA in Q3 2026?"
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "tool_calls": [
+        {
+          "id": "call_18",
+          "type": "function",
+          "function": {
+            "name": "run_query",
+            "arguments": "{\n  \"measures\": [\n    \"NetRevenue\",\n    \"Quantity\"\n  ],\n  \"dimensions\": [\n    \"ProductLine\"\n  ],\n  \"filter\": \"Region eq 'NA' and Quarter eq '2026-Q3'\"\n}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_18",
+      "content": "{\n  \"rows\": [\n    {\n      \"ProductLine\": \"Pumps\",\n      \"NetRevenue\": 148055,\n      \"Quantity\": 605,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Valves\",\n      \"NetRevenue\": 154920,\n      \"Quantity\": 716,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Motors\",\n      \"NetRevenue\": 161785,\n      \"Quantity\": 827,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Sensors\",\n      \"NetRevenue\": 168650,\n      \"Quantity\": 938,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Controllers\",\n      \"NetRevenue\": 175515,\n      \"Quantity\": 1049,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Services\",\n      \"NetRevenue\": 182380,\n      \"Quantity\": 1160,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Spare Parts\",\n      \"NetRevenue\": 189245,\n      \"Quantity\": 1271,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Software\",\n      \"NetRevenue\": 196110,\n      \"Quantity\": 1382,\n      \"Currency\": \"EUR\"\n    }\n  ]\n}"
+    },
+    {
+      "role": "assistant",
+      "content": "In NA, Services had the highest revenue in Q3."
+    },
+    {
+      "role": "user",
+      "content": "Revenue by product line for LATAM in Q4 2026?"
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "tool_calls": [
+        {
+          "id": "call_19",
+          "type": "function",
+          "function": {
+            "name": "run_query",
+            "arguments": "{\n  \"measures\": [\n    \"NetRevenue\",\n    \"Quantity\"\n  ],\n  \"dimensions\": [\n    \"ProductLine\"\n  ],\n  \"filter\": \"Region eq 'LATAM' and Quarter eq '2026-Q4'\"\n}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_19",
+      "content": "{\n  \"rows\": [\n    {\n      \"ProductLine\": \"Pumps\",\n      \"NetRevenue\": 157666,\n      \"Quantity\": 790,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Valves\",\n      \"NetRevenue\": 165904,\n      \"Quantity\": 938,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Motors\",\n      \"NetRevenue\": 174142,\n      \"Quantity\": 1086,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Sensors\",\n      \"NetRevenue\": 182380,\n      \"Quantity\": 1234,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Controllers\",\n      \"NetRevenue\": 190618,\n      \"Quantity\": 1382,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Services\",\n      \"NetRevenue\": 198856,\n      \"Quantity\": 1530,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Spare Parts\",\n      \"NetRevenue\": 207094,\n      \"Quantity\": 1678,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Software\",\n      \"NetRevenue\": 215332,\n      \"Quantity\": 1826,\n      \"Currency\": \"EUR\"\n    }\n  ]\n}"
+    },
+    {
+      "role": "assistant",
+      "content": "In LATAM, Pumps had the highest revenue in Q4."
+    },
+    {
+      "role": "user",
+      "content": "Revenue by product line for EMEA in Q1 2026?"
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "tool_calls": [
+        {
+          "id": "call_20",
+          "type": "function",
+          "function": {
+            "name": "run_query",
+            "arguments": "{\n  \"measures\": [\n    \"NetRevenue\",\n    \"Quantity\"\n  ],\n  \"dimensions\": [\n    \"ProductLine\"\n  ],\n  \"filter\": \"Region eq 'EMEA' and Quarter eq '2026-Q1'\"\n}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_20",
+      "content": "{\n  \"rows\": [\n    {\n      \"ProductLine\": \"Pumps\",\n      \"NetRevenue\": 167277,\n      \"Quantity\": 975,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Valves\",\n      \"NetRevenue\": 176888,\n      \"Quantity\": 1160,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Motors\",\n      \"NetRevenue\": 186499,\n      \"Quantity\": 1345,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Sensors\",\n      \"NetRevenue\": 196110,\n      \"Quantity\": 1530,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Controllers\",\n      \"NetRevenue\": 205721,\n      \"Quantity\": 1715,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Services\",\n      \"NetRevenue\": 215332,\n      \"Quantity\": 1900,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Spare Parts\",\n      \"NetRevenue\": 224943,\n      \"Quantity\": 85,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Software\",\n      \"NetRevenue\": 234554,\n      \"Quantity\": 270,\n      \"Currency\": \"EUR\"\n    }\n  ]\n}"
+    },
+    {
+      "role": "assistant",
+      "content": "In EMEA, Motors had the highest revenue in Q1."
+    },
+    {
+      "role": "user",
+      "content": "Revenue by product line for APJ in Q2 2026?"
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "tool_calls": [
+        {
+          "id": "call_21",
+          "type": "function",
+          "function": {
+            "name": "run_query",
+            "arguments": "{\n  \"measures\": [\n    \"NetRevenue\",\n    \"Quantity\"\n  ],\n  \"dimensions\": [\n    \"ProductLine\"\n  ],\n  \"filter\": \"Region eq 'APJ' and Quarter eq '2026-Q2'\"\n}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_21",
+      "content": "{\n  \"rows\": [\n    {\n      \"ProductLine\": \"Pumps\",\n      \"NetRevenue\": 176888,\n      \"Quantity\": 1160,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Valves\",\n      \"NetRevenue\": 187872,\n      \"Quantity\": 1382,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Motors\",\n      \"NetRevenue\": 198856,\n      \"Quantity\": 1604,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Sensors\",\n      \"NetRevenue\": 209840,\n      \"Quantity\": 1826,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Controllers\",\n      \"NetRevenue\": 220824,\n      \"Quantity\": 2048,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Services\",\n      \"NetRevenue\": 231808,\n      \"Quantity\": 270,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Spare Parts\",\n      \"NetRevenue\": 242792,\n      \"Quantity\": 492,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Software\",\n      \"NetRevenue\": 253776,\n      \"Quantity\": 714,\n      \"Currency\": \"EUR\"\n    }\n  ]\n}"
+    },
+    {
+      "role": "assistant",
+      "content": "In APJ, Services had the highest revenue in Q2."
+    },
+    {
+      "role": "user",
+      "content": "Revenue by product line for NA in Q3 2026?"
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "tool_calls": [
+        {
+          "id": "call_22",
+          "type": "function",
+          "function": {
+            "name": "run_query",
+            "arguments": "{\n  \"measures\": [\n    \"NetRevenue\",\n    \"Quantity\"\n  ],\n  \"dimensions\": [\n    \"ProductLine\"\n  ],\n  \"filter\": \"Region eq 'NA' and Quarter eq '2026-Q3'\"\n}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_22",
+      "content": "{\n  \"rows\": [\n    {\n      \"ProductLine\": \"Pumps\",\n      \"NetRevenue\": 186499,\n      \"Quantity\": 1345,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Valves\",\n      \"NetRevenue\": 198856,\n      \"Quantity\": 1604,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Motors\",\n      \"NetRevenue\": 211213,\n      \"Quantity\": 1863,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Sensors\",\n      \"NetRevenue\": 223570,\n      \"Quantity\": 122,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Controllers\",\n      \"NetRevenue\": 235927,\n      \"Quantity\": 381,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Services\",\n      \"NetRevenue\": 248284,\n      \"Quantity\": 640,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Spare Parts\",\n      \"NetRevenue\": 260641,\n      \"Quantity\": 899,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Software\",\n      \"NetRevenue\": 272998,\n      \"Quantity\": 1158,\n      \"Currency\": \"EUR\"\n    }\n  ]\n}"
+    },
+    {
+      "role": "assistant",
+      "content": "In NA, Pumps had the highest revenue in Q3."
+    },
+    {
+      "role": "user",
+      "content": "Revenue by product line for LATAM in Q4 2026?"
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "tool_calls": [
+        {
+          "id": "call_23",
+          "type": "function",
+          "function": {
+            "name": "run_query",
+            "arguments": "{\n  \"measures\": [\n    \"NetRevenue\",\n    \"Quantity\"\n  ],\n  \"dimensions\": [\n    \"ProductLine\"\n  ],\n  \"filter\": \"Region eq 'LATAM' and Quarter eq '2026-Q4'\"\n}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_23",
+      "content": "{\n  \"rows\": [\n    {\n      \"ProductLine\": \"Pumps\",\n      \"NetRevenue\": 196110,\n      \"Quantity\": 1530,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Valves\",\n      \"NetRevenue\": 209840,\n      \"Quantity\": 1826,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Motors\",\n      \"NetRevenue\": 223570,\n      \"Quantity\": 122,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Sensors\",\n      \"NetRevenue\": 237300,\n      \"Quantity\": 418,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Controllers\",\n      \"NetRevenue\": 251030,\n      \"Quantity\": 714,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Services\",\n      \"NetRevenue\": 264760,\n      \"Quantity\": 1010,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Spare Parts\",\n      \"NetRevenue\": 278490,\n      \"Quantity\": 1306,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Software\",\n      \"NetRevenue\": 292220,\n      \"Quantity\": 1602,\n      \"Currency\": \"EUR\"\n    }\n  ]\n}"
+    },
+    {
+      "role": "assistant",
+      "content": "In LATAM, Motors had the highest revenue in Q4."
+    },
+    {
+      "role": "user",
+      "content": "Revenue by product line for EMEA in Q1 2026?"
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "tool_calls": [
+        {
+          "id": "call_24",
+          "type": "function",
+          "function": {
+            "name": "run_query",
+            "arguments": "{\n  \"measures\": [\n    \"NetRevenue\",\n    \"Quantity\"\n  ],\n  \"dimensions\": [\n    \"ProductLine\"\n  ],\n  \"filter\": \"Region eq 'EMEA' and Quarter eq '2026-Q1'\"\n}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_24",
+      "content": "{\n  \"rows\": [\n    {\n      \"ProductLine\": \"Pumps\",\n      \"NetRevenue\": 205721,\n      \"Quantity\": 1715,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Valves\",\n      \"NetRevenue\": 220824,\n      \"Quantity\": 2048,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Motors\",\n      \"NetRevenue\": 235927,\n      \"Quantity\": 381,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Sensors\",\n      \"NetRevenue\": 251030,\n      \"Quantity\": 714,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Controllers\",\n      \"NetRevenue\": 266133,\n      \"Quantity\": 1047,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Services\",\n      \"NetRevenue\": 281236,\n      \"Quantity\": 1380,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Spare Parts\",\n      \"NetRevenue\": 296339,\n      \"Quantity\": 1713,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Software\",\n      \"NetRevenue\": 311442,\n      \"Quantity\": 2046,\n      \"Currency\": \"EUR\"\n    }\n  ]\n}"
+    },
+    {
+      "role": "assistant",
+      "content": "In EMEA, Services had the highest revenue in Q1."
+    },
+    {
+      "role": "user",
+      "content": "Revenue by product line for APJ in Q2 2026?"
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "tool_calls": [
+        {
+          "id": "call_25",
+          "type": "function",
+          "function": {
+            "name": "run_query",
+            "arguments": "{\n  \"measures\": [\n    \"NetRevenue\",\n    \"Quantity\"\n  ],\n  \"dimensions\": [\n    \"ProductLine\"\n  ],\n  \"filter\": \"Region eq 'APJ' and Quarter eq '2026-Q2'\"\n}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_25",
+      "content": "{\n  \"rows\": [\n    {\n      \"ProductLine\": \"Pumps\",\n      \"NetRevenue\": 215332,\n      \"Quantity\": 1900,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Valves\",\n      \"NetRevenue\": 231808,\n      \"Quantity\": 270,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Motors\",\n      \"NetRevenue\": 248284,\n      \"Quantity\": 640,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Sensors\",\n      \"NetRevenue\": 264760,\n      \"Quantity\": 1010,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Controllers\",\n      \"NetRevenue\": 281236,\n      \"Quantity\": 1380,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Services\",\n      \"NetRevenue\": 297712,\n      \"Quantity\": 1750,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Spare Parts\",\n      \"NetRevenue\": 314188,\n      \"Quantity\": 120,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Software\",\n      \"NetRevenue\": 330664,\n      \"Quantity\": 490,\n      \"Currency\": \"EUR\"\n    }\n  ]\n}"
+    },
+    {
+      "role": "assistant",
+      "content": "In APJ, Pumps had the highest revenue in Q2."
+    },
+    {
+      "role": "user",
+      "content": "Revenue by product line for NA in Q3 2026?"
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "tool_calls": [
+        {
+          "id": "call_26",
+          "type": "function",
+          "function": {
+            "name": "run_query",
+            "arguments": "{\n  \"measures\": [\n    \"NetRevenue\",\n    \"Quantity\"\n  ],\n  \"dimensions\": [\n    \"ProductLine\"\n  ],\n  \"filter\": \"Region eq 'NA' and Quarter eq '2026-Q3'\"\n}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_26",
+      "content": "{\n  \"rows\": [\n    {\n      \"ProductLine\": \"Pumps\",\n      \"NetRevenue\": 224943,\n      \"Quantity\": 85,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Valves\",\n      \"NetRevenue\": 242792,\n      \"Quantity\": 492,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Motors\",\n      \"NetRevenue\": 260641,\n      \"Quantity\": 899,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Sensors\",\n      \"NetRevenue\": 278490,\n      \"Quantity\": 1306,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Controllers\",\n      \"NetRevenue\": 296339,\n      \"Quantity\": 1713,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Services\",\n      \"NetRevenue\": 314188,\n      \"Quantity\": 120,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Spare Parts\",\n      \"NetRevenue\": 332037,\n      \"Quantity\": 527,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Software\",\n      \"NetRevenue\": 349886,\n      \"Quantity\": 934,\n      \"Currency\": \"EUR\"\n    }\n  ]\n}"
+    },
+    {
+      "role": "assistant",
+      "content": "In NA, Motors had the highest revenue in Q3."
+    },
+    {
+      "role": "user",
+      "content": "Revenue by product line for LATAM in Q4 2026?"
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "tool_calls": [
+        {
+          "id": "call_27",
+          "type": "function",
+          "function": {
+            "name": "run_query",
+            "arguments": "{\n  \"measures\": [\n    \"NetRevenue\",\n    \"Quantity\"\n  ],\n  \"dimensions\": [\n    \"ProductLine\"\n  ],\n  \"filter\": \"Region eq 'LATAM' and Quarter eq '2026-Q4'\"\n}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_27",
+      "content": "{\n  \"rows\": [\n    {\n      \"ProductLine\": \"Pumps\",\n      \"NetRevenue\": 234554,\n      \"Quantity\": 270,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Valves\",\n      \"NetRevenue\": 253776,\n      \"Quantity\": 714,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Motors\",\n      \"NetRevenue\": 272998,\n      \"Quantity\": 1158,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Sensors\",\n      \"NetRevenue\": 292220,\n      \"Quantity\": 1602,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Controllers\",\n      \"NetRevenue\": 311442,\n      \"Quantity\": 2046,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Services\",\n      \"NetRevenue\": 330664,\n      \"Quantity\": 490,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Spare Parts\",\n      \"NetRevenue\": 349886,\n      \"Quantity\": 934,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Software\",\n      \"NetRevenue\": 369108,\n      \"Quantity\": 1378,\n      \"Currency\": \"EUR\"\n    }\n  ]\n}"
+    },
+    {
+      "role": "assistant",
+      "content": "In LATAM, Services had the highest revenue in Q4."
+    },
+    {
+      "role": "user",
+      "content": "Revenue by product line for EMEA in Q1 2026?"
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "tool_calls": [
+        {
+          "id": "call_28",
+          "type": "function",
+          "function": {
+            "name": "run_query",
+            "arguments": "{\n  \"measures\": [\n    \"NetRevenue\",\n    \"Quantity\"\n  ],\n  \"dimensions\": [\n    \"ProductLine\"\n  ],\n  \"filter\": \"Region eq 'EMEA' and Quarter eq '2026-Q1'\"\n}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_28",
+      "content": "{\n  \"rows\": [\n    {\n      \"ProductLine\": \"Pumps\",\n      \"NetRevenue\": 244165,\n      \"Quantity\": 455,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Valves\",\n      \"NetRevenue\": 264760,\n      \"Quantity\": 936,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Motors\",\n      \"NetRevenue\": 285355,\n      \"Quantity\": 1417,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Sensors\",\n      \"NetRevenue\": 305950,\n      \"Quantity\": 1898,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Controllers\",\n      \"NetRevenue\": 326545,\n      \"Quantity\": 379,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Services\",\n      \"NetRevenue\": 347140,\n      \"Quantity\": 860,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Spare Parts\",\n      \"NetRevenue\": 367735,\n      \"Quantity\": 1341,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Software\",\n      \"NetRevenue\": 388330,\n      \"Quantity\": 1822,\n      \"Currency\": \"EUR\"\n    }\n  ]\n}"
+    },
+    {
+      "role": "assistant",
+      "content": "In EMEA, Pumps had the highest revenue in Q1."
+    },
+    {
+      "role": "user",
+      "content": "Revenue by product line for APJ in Q2 2026?"
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "tool_calls": [
+        {
+          "id": "call_29",
+          "type": "function",
+          "function": {
+            "name": "run_query",
+            "arguments": "{\n  \"measures\": [\n    \"NetRevenue\",\n    \"Quantity\"\n  ],\n  \"dimensions\": [\n    \"ProductLine\"\n  ],\n  \"filter\": \"Region eq 'APJ' and Quarter eq '2026-Q2'\"\n}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_29",
+      "content": "{\n  \"rows\": [\n    {\n      \"ProductLine\": \"Pumps\",\n      \"NetRevenue\": 253776,\n      \"Quantity\": 640,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Valves\",\n      \"NetRevenue\": 275744,\n      \"Quantity\": 1158,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Motors\",\n      \"NetRevenue\": 297712,\n      \"Quantity\": 1676,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Sensors\",\n      \"NetRevenue\": 319680,\n      \"Quantity\": 194,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Controllers\",\n      \"NetRevenue\": 341648,\n      \"Quantity\": 712,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Services\",\n      \"NetRevenue\": 363616,\n      \"Quantity\": 1230,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Spare Parts\",\n      \"NetRevenue\": 385584,\n      \"Quantity\": 1748,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Software\",\n      \"NetRevenue\": 407552,\n      \"Quantity\": 266,\n      \"Currency\": \"EUR\"\n    }\n  ]\n}"
+    },
+    {
+      "role": "assistant",
+      "content": "In APJ, Motors had the highest revenue in Q2."
+    },
+    {
+      "role": "user",
+      "content": "Revenue by product line for NA in Q3 2026?"
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "tool_calls": [
+        {
+          "id": "call_30",
+          "type": "function",
+          "function": {
+            "name": "run_query",
+            "arguments": "{\n  \"measures\": [\n    \"NetRevenue\",\n    \"Quantity\"\n  ],\n  \"dimensions\": [\n    \"ProductLine\"\n  ],\n  \"filter\": \"Region eq 'NA' and Quarter eq '2026-Q3'\"\n}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_30",
+      "content": "{\n  \"rows\": [\n    {\n      \"ProductLine\": \"Pumps\",\n      \"NetRevenue\": 263387,\n      \"Quantity\": 825,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Valves\",\n      \"NetRevenue\": 286728,\n      \"Quantity\": 1380,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Motors\",\n      \"NetRevenue\": 310069,\n      \"Quantity\": 1935,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Sensors\",\n      \"NetRevenue\": 333410,\n      \"Quantity\": 490,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Controllers\",\n      \"NetRevenue\": 356751,\n      \"Quantity\": 1045,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Services\",\n      \"NetRevenue\": 380092,\n      \"Quantity\": 1600,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Spare Parts\",\n      \"NetRevenue\": 403433,\n      \"Quantity\": 155,\n      \"Currency\": \"EUR\"\n    },\n    {\n      \"ProductLine\": \"Software\",\n      \"NetRevenue\": 426774,\n      \"Quantity\": 710,\n      \"Currency\": \"EUR\"\n    }\n  ]\n}"
+    },
+    {
+      "role": "assistant",
+      "content": "In NA, Services had the highest revenue in Q3."
+    },
+    {
+      "role": "user",
+      "content": "Which product line grew the most across all regions?"
+    }
+  ],
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "run_query",
+        "description": "Run a read-only analytical query on the sales cube.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "measures": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "dimensions": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "filter": {
+              "type": "string",
+              "description": "Filter expression"
+            }
+          },
+          "required": [
+            "measures",
+            "dimensions",
+            "filter"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "get_kpi_definition",
+        "description": "Read the definition of a KPI.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "kpi": {
+              "type": "string",
+              "description": "KPI name"
+            }
+          },
+          "required": [
+            "kpi"
+          ]
+        }
+      }
+    }
+  ]
+}

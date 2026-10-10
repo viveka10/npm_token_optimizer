@@ -1,0 +1,83 @@
+{
+  "name": "04-helpdesk-repeated-instructions",
+  "description": "Helpdesk chat where the client appends the rules to every user message (dedupe: paragraphs).",
+  "useCase": "helpdesk",
+  "model": "gpt-4.1-mini",
+  "params": {
+    "temperature": 0.2
+  },
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are the internal IT helpdesk assistant of a mid-size manufacturing company.\n\nRules for your answer:\n- Answer in the language of the question.\n- Never ask for passwords or one-time codes.\n- If the issue needs an administrator, tell the user to open a ticket in the IT service portal."
+    },
+    {
+      "role": "user",
+      "content": "My SAP GUI shows \"logon balancing error\". What can I do?\n\nRules for your answer:\n- Answer in the language of the question.\n- Never ask for passwords or one-time codes.\n- If the issue needs an administrator, tell the user to open a ticket in the IT service portal."
+    },
+    {
+      "role": "assistant",
+      "content": "Restart SAP Logon and select the system again. If the error continues, the message server may be down; please open a ticket."
+    },
+    {
+      "role": "user",
+      "content": "How do I reset my SAP password?\n\nRules for your answer:\n- Answer in the language of the question.\n- Never ask for passwords or one-time codes.\n- If the issue needs an administrator, tell the user to open a ticket in the IT service portal."
+    },
+    {
+      "role": "assistant",
+      "content": "Use the self-service password reset link on the logon screen. You will receive a confirmation email."
+    },
+    {
+      "role": "user",
+      "content": "Outlook does not sync my calendar.\n\nRules for your answer:\n- Answer in the language of the question.\n- Never ask for passwords or one-time codes.\n- If the issue needs an administrator, tell the user to open a ticket in the IT service portal."
+    },
+    {
+      "role": "assistant",
+      "content": "Close Outlook, start it again and check the connection status in the bottom bar. If it shows \"Disconnected\", open a ticket."
+    },
+    {
+      "role": "user",
+      "content": "The printer on floor 2 prints empty pages.\n\nRules for your answer:\n- Answer in the language of the question.\n- Never ask for passwords or one-time codes.\n- If the issue needs an administrator, tell the user to open a ticket in the IT service portal."
+    },
+    {
+      "role": "assistant",
+      "content": "Please check the toner level on the printer display. If the toner is fine, open a ticket so facility IT can check the device."
+    },
+    {
+      "role": "user",
+      "content": "VPN disconnects every 10 minutes.\n\nRules for your answer:\n- Answer in the language of the question.\n- Never ask for passwords or one-time codes.\n- If the issue needs an administrator, tell the user to open a ticket in the IT service portal."
+    },
+    {
+      "role": "assistant",
+      "content": "Update the VPN client from the software center and switch to the \"Corporate-EU\" profile."
+    },
+    {
+      "role": "user",
+      "content": "Can I install Python on my laptop?\n\nRules for your answer:\n- Answer in the language of the question.\n- Never ask for passwords or one-time codes.\n- If the issue needs an administrator, tell the user to open a ticket in the IT service portal."
+    },
+    {
+      "role": "assistant",
+      "content": "Yes, Python is available in the software center. Administrator rights are not needed."
+    },
+    {
+      "role": "user",
+      "content": "My Fiori launchpad tile for \"Manage Purchase Orders\" disappeared.\n\nRules for your answer:\n- Answer in the language of the question.\n- Never ask for passwords or one-time codes.\n- If the issue needs an administrator, tell the user to open a ticket in the IT service portal."
+    },
+    {
+      "role": "assistant",
+      "content": "Your role assignment may have changed. Please open a ticket and mention the tile name."
+    },
+    {
+      "role": "user",
+      "content": "Teams camera is black.\n\nRules for your answer:\n- Answer in the language of the question.\n- Never ask for passwords or one-time codes.\n- If the issue needs an administrator, tell the user to open a ticket in the IT service portal."
+    },
+    {
+      "role": "assistant",
+      "content": "Check the privacy shutter on the laptop and the camera permission in Windows settings."
+    },
+    {
+      "role": "user",
+      "content": "Excel crashes when I open the monthly controlling report.\n\nRules for your answer:\n- Answer in the language of the question.\n- Never ask for passwords or one-time codes.\n- If the issue needs an administrator, tell the user to open a ticket in the IT service portal."
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "name": "09-customer-service-rag-context",
+  "description": "RAG prompt with retrieved documents full of extra spaces and blank lines (normalize: whitespace).",
+  "useCase": "customer-service",
+  "model": "gpt-4.1-mini",
+  "params": {
+    "temperature": 0
+  },
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are the customer service assistant of a B2B web shop. Answer only from the context.\n\nContext:\n\n--- Document 1 ---\nReturns policy\n\n\n\nCustomers   can return   standard products within 30 days.   \n\n\n\nCustom-made products   cannot be returned.\n\n\n\n\n\n--- Document 2 ---\nWarranty\n\n\n\n   The warranty period is 24 months   from delivery.    \n\n\nSpare parts have a 12-month warranty.   \n\n\n\n\n\n\n--- Document 3 ---\nShipping\n\n\n\nStandard shipping takes   3 to 5 working days.\n\n\n\nExpress shipping   (1 to 2 days)   costs 25 EUR.   \n\n\n\n\n\n--- Document 4 ---\nPayment\n\n\n\n   We accept invoice payment (30 days net)   for business customers.\n\n\n\n   Credit card payment is available in the web shop.\n\n\n"
+    },
+    {
+      "role": "user",
+      "content": "Hi,   I bought   a spare part   8 months ago and it broke.   Is it still under warranty?   "
+    }
+  ]
+}

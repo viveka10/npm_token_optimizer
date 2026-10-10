@@ -1,0 +1,989 @@
+{
+  "name": "07-procurement-40-tools-long-descriptions",
+  "description": "Procurement agent with 40 tools whose descriptions are long (tools: selection + description shortening).",
+  "useCase": "procurement-agent",
+  "model": "gpt-4.1",
+  "params": {
+    "temperature": 0
+  },
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a procurement agent for SAP S/4HANA Cloud. Use the tools to answer questions about purchasing documents and suppliers."
+    },
+    {
+      "role": "user",
+      "content": "Show purchase order 4500001234."
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "tool_calls": [
+        {
+          "id": "call_12",
+          "type": "function",
+          "function": {
+            "name": "get_purchase_order",
+            "arguments": "{\n  \"id\": \"4500001234\"\n}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_12",
+      "content": "{\n  \"purchaseOrder\": \"4500001234\",\n  \"supplier\": \"17300001\",\n  \"netValue\": 15250,\n  \"currency\": \"EUR\",\n  \"items\": 3\n}"
+    },
+    {
+      "role": "assistant",
+      "content": "PO 4500001234 has 3 items, 15,250.00 EUR."
+    },
+    {
+      "role": "user",
+      "content": "Which supplier is it from?"
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "tool_calls": [
+        {
+          "id": "call_13",
+          "type": "function",
+          "function": {
+            "name": "get_supplier",
+            "arguments": "{\n  \"id\": \"17300001\"\n}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_13",
+      "content": "{\n  \"supplier\": \"17300001\",\n  \"name\": \"Domestic Supplier DE 1\",\n  \"country\": \"DE\"\n}"
+    },
+    {
+      "role": "assistant",
+      "content": "It is from Domestic Supplier DE 1 (17300001)."
+    },
+    {
+      "role": "user",
+      "content": "Is there a contract with that supplier?"
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "tool_calls": [
+        {
+          "id": "call_14",
+          "type": "function",
+          "function": {
+            "name": "search_contracts",
+            "arguments": "{\n  \"query\": \"17300001\",\n  \"top\": 5\n}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_14",
+      "content": "{\n  \"results\": [\n    {\n      \"id\": \"4600000012\",\n      \"status\": \"Active\"\n    }\n  ]\n}"
+    },
+    {
+      "role": "assistant",
+      "content": "Yes, contract 4600000012 is active."
+    },
+    {
+      "role": "user",
+      "content": "Any open supplier invoices for that PO?"
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "tool_calls": [
+        {
+          "id": "call_15",
+          "type": "function",
+          "function": {
+            "name": "search_supplier_invoices",
+            "arguments": "{\n  \"query\": \"17300001\",\n  \"top\": 5\n}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_15",
+      "content": "{\n  \"results\": [\n    {\n      \"id\": \"5105600101\",\n      \"status\": \"Active\"\n    }\n  ]\n}"
+    },
+    {
+      "role": "assistant",
+      "content": "Invoice 5105600101 is open."
+    },
+    {
+      "role": "user",
+      "content": "Create a goods receipt overview for this purchase order and check the source list for its materials."
+    }
+  ],
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "get_purchase_requisition",
+        "description": "Read a single purchase requisition by its key. The result contains all fields that the API returns, including administrative data such as created by, created on, last changed by and last changed on, as well as all extension fields that are configured in the tenant. Use this tool only when the user explicitly asks for this kind of document; for related documents use the dedicated list tools. If the document does not exist, the tool returns an empty object and you must tell the user that the document was not found instead of guessing values. Dates are returned in ISO 8601 format and amounts as decimal numbers together with the currency code. Authorization checks are performed with the identity of the current user, so missing fields can also mean that the user lacks authorization for them. Do not call this tool more than three times in a single turn; if you need more documents, ask the user to narrow down the request.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Key of the purchase requisition. Leading zeros are optional; the tool adds them as required by the backend. Must not contain wildcards."
+            }
+          },
+          "required": [
+            "id"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "search_purchase_requisitions",
+        "description": "Search purchase requisitions by free text and filters. The result contains all fields that the API returns, including administrative data such as created by, created on, last changed by and last changed on, as well as all extension fields that are configured in the tenant. Use this tool only when the user explicitly asks for this kind of document; for related documents use the dedicated list tools. If the document does not exist, the tool returns an empty object and you must tell the user that the document was not found instead of guessing values. Dates are returned in ISO 8601 format and amounts as decimal numbers together with the currency code. Authorization checks are performed with the identity of the current user, so missing fields can also mean that the user lacks authorization for them. Do not call this tool more than three times in a single turn; if you need more documents, ask the user to narrow down the request.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "Free text"
+            },
+            "top": {
+              "type": "number",
+              "description": "Maximum number of results, default 20"
+            }
+          },
+          "required": [
+            "query",
+            "top"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "get_purchase_order",
+        "description": "Read a single purchase order by its key. The result contains all fields that the API returns, including administrative data such as created by, created on, last changed by and last changed on, as well as all extension fields that are configured in the tenant. Use this tool only when the user explicitly asks for this kind of document; for related documents use the dedicated list tools. If the document does not exist, the tool returns an empty object and you must tell the user that the document was not found instead of guessing values. Dates are returned in ISO 8601 format and amounts as decimal numbers together with the currency code. Authorization checks are performed with the identity of the current user, so missing fields can also mean that the user lacks authorization for them. Do not call this tool more than three times in a single turn; if you need more documents, ask the user to narrow down the request.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Key of the purchase order. Leading zeros are optional; the tool adds them as required by the backend. Must not contain wildcards."
+            }
+          },
+          "required": [
+            "id"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "search_purchase_orders",
+        "description": "Search purchase orders by free text and filters. The result contains all fields that the API returns, including administrative data such as created by, created on, last changed by and last changed on, as well as all extension fields that are configured in the tenant. Use this tool only when the user explicitly asks for this kind of document; for related documents use the dedicated list tools. If the document does not exist, the tool returns an empty object and you must tell the user that the document was not found instead of guessing values. Dates are returned in ISO 8601 format and amounts as decimal numbers together with the currency code. Authorization checks are performed with the identity of the current user, so missing fields can also mean that the user lacks authorization for them. Do not call this tool more than three times in a single turn; if you need more documents, ask the user to narrow down the request.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "Free text"
+            },
+            "top": {
+              "type": "number",
+              "description": "Maximum number of results, default 20"
+            }
+          },
+          "required": [
+            "query",
+            "top"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "get_supplier_invoice",
+        "description": "Read a single supplier invoice by its key. The result contains all fields that the API returns, including administrative data such as created by, created on, last changed by and last changed on, as well as all extension fields that are configured in the tenant. Use this tool only when the user explicitly asks for this kind of document; for related documents use the dedicated list tools. If the document does not exist, the tool returns an empty object and you must tell the user that the document was not found instead of guessing values. Dates are returned in ISO 8601 format and amounts as decimal numbers together with the currency code. Authorization checks are performed with the identity of the current user, so missing fields can also mean that the user lacks authorization for them. Do not call this tool more than three times in a single turn; if you need more documents, ask the user to narrow down the request.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Key of the supplier invoice. Leading zeros are optional; the tool adds them as required by the backend. Must not contain wildcards."
+            }
+          },
+          "required": [
+            "id"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "search_supplier_invoices",
+        "description": "Search supplier invoices by free text and filters. The result contains all fields that the API returns, including administrative data such as created by, created on, last changed by and last changed on, as well as all extension fields that are configured in the tenant. Use this tool only when the user explicitly asks for this kind of document; for related documents use the dedicated list tools. If the document does not exist, the tool returns an empty object and you must tell the user that the document was not found instead of guessing values. Dates are returned in ISO 8601 format and amounts as decimal numbers together with the currency code. Authorization checks are performed with the identity of the current user, so missing fields can also mean that the user lacks authorization for them. Do not call this tool more than three times in a single turn; if you need more documents, ask the user to narrow down the request.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "Free text"
+            },
+            "top": {
+              "type": "number",
+              "description": "Maximum number of results, default 20"
+            }
+          },
+          "required": [
+            "query",
+            "top"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "get_goods_receipt",
+        "description": "Read a single goods receipt by its key. The result contains all fields that the API returns, including administrative data such as created by, created on, last changed by and last changed on, as well as all extension fields that are configured in the tenant. Use this tool only when the user explicitly asks for this kind of document; for related documents use the dedicated list tools. If the document does not exist, the tool returns an empty object and you must tell the user that the document was not found instead of guessing values. Dates are returned in ISO 8601 format and amounts as decimal numbers together with the currency code. Authorization checks are performed with the identity of the current user, so missing fields can also mean that the user lacks authorization for them. Do not call this tool more than three times in a single turn; if you need more documents, ask the user to narrow down the request.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Key of the goods receipt. Leading zeros are optional; the tool adds them as required by the backend. Must not contain wildcards."
+            }
+          },
+          "required": [
+            "id"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "search_goods_receipts",
+        "description": "Search goods receipts by free text and filters. The result contains all fields that the API returns, including administrative data such as created by, created on, last changed by and last changed on, as well as all extension fields that are configured in the tenant. Use this tool only when the user explicitly asks for this kind of document; for related documents use the dedicated list tools. If the document does not exist, the tool returns an empty object and you must tell the user that the document was not found instead of guessing values. Dates are returned in ISO 8601 format and amounts as decimal numbers together with the currency code. Authorization checks are performed with the identity of the current user, so missing fields can also mean that the user lacks authorization for them. Do not call this tool more than three times in a single turn; if you need more documents, ask the user to narrow down the request.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "Free text"
+            },
+            "top": {
+              "type": "number",
+              "description": "Maximum number of results, default 20"
+            }
+          },
+          "required": [
+            "query",
+            "top"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "get_supplier",
+        "description": "Read a single supplier by its key. The result contains all fields that the API returns, including administrative data such as created by, created on, last changed by and last changed on, as well as all extension fields that are configured in the tenant. Use this tool only when the user explicitly asks for this kind of document; for related documents use the dedicated list tools. If the document does not exist, the tool returns an empty object and you must tell the user that the document was not found instead of guessing values. Dates are returned in ISO 8601 format and amounts as decimal numbers together with the currency code. Authorization checks are performed with the identity of the current user, so missing fields can also mean that the user lacks authorization for them. Do not call this tool more than three times in a single turn; if you need more documents, ask the user to narrow down the request.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Key of the supplier. Leading zeros are optional; the tool adds them as required by the backend. Must not contain wildcards."
+            }
+          },
+          "required": [
+            "id"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "search_suppliers",
+        "description": "Search suppliers by free text and filters. The result contains all fields that the API returns, including administrative data such as created by, created on, last changed by and last changed on, as well as all extension fields that are configured in the tenant. Use this tool only when the user explicitly asks for this kind of document; for related documents use the dedicated list tools. If the document does not exist, the tool returns an empty object and you must tell the user that the document was not found instead of guessing values. Dates are returned in ISO 8601 format and amounts as decimal numbers together with the currency code. Authorization checks are performed with the identity of the current user, so missing fields can also mean that the user lacks authorization for them. Do not call this tool more than three times in a single turn; if you need more documents, ask the user to narrow down the request.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "Free text"
+            },
+            "top": {
+              "type": "number",
+              "description": "Maximum number of results, default 20"
+            }
+          },
+          "required": [
+            "query",
+            "top"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "get_contract",
+        "description": "Read a single contract by its key. The result contains all fields that the API returns, including administrative data such as created by, created on, last changed by and last changed on, as well as all extension fields that are configured in the tenant. Use this tool only when the user explicitly asks for this kind of document; for related documents use the dedicated list tools. If the document does not exist, the tool returns an empty object and you must tell the user that the document was not found instead of guessing values. Dates are returned in ISO 8601 format and amounts as decimal numbers together with the currency code. Authorization checks are performed with the identity of the current user, so missing fields can also mean that the user lacks authorization for them. Do not call this tool more than three times in a single turn; if you need more documents, ask the user to narrow down the request.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Key of the contract. Leading zeros are optional; the tool adds them as required by the backend. Must not contain wildcards."
+            }
+          },
+          "required": [
+            "id"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "search_contracts",
+        "description": "Search contracts by free text and filters. The result contains all fields that the API returns, including administrative data such as created by, created on, last changed by and last changed on, as well as all extension fields that are configured in the tenant. Use this tool only when the user explicitly asks for this kind of document; for related documents use the dedicated list tools. If the document does not exist, the tool returns an empty object and you must tell the user that the document was not found instead of guessing values. Dates are returned in ISO 8601 format and amounts as decimal numbers together with the currency code. Authorization checks are performed with the identity of the current user, so missing fields can also mean that the user lacks authorization for them. Do not call this tool more than three times in a single turn; if you need more documents, ask the user to narrow down the request.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "Free text"
+            },
+            "top": {
+              "type": "number",
+              "description": "Maximum number of results, default 20"
+            }
+          },
+          "required": [
+            "query",
+            "top"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "get_scheduling_agreement",
+        "description": "Read a single scheduling agreement by its key. The result contains all fields that the API returns, including administrative data such as created by, created on, last changed by and last changed on, as well as all extension fields that are configured in the tenant. Use this tool only when the user explicitly asks for this kind of document; for related documents use the dedicated list tools. If the document does not exist, the tool returns an empty object and you must tell the user that the document was not found instead of guessing values. Dates are returned in ISO 8601 format and amounts as decimal numbers together with the currency code. Authorization checks are performed with the identity of the current user, so missing fields can also mean that the user lacks authorization for them. Do not call this tool more than three times in a single turn; if you need more documents, ask the user to narrow down the request.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Key of the scheduling agreement. Leading zeros are optional; the tool adds them as required by the backend. Must not contain wildcards."
+            }
+          },
+          "required": [
+            "id"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "search_scheduling_agreements",
+        "description": "Search scheduling agreements by free text and filters. The result contains all fields that the API returns, including administrative data such as created by, created on, last changed by and last changed on, as well as all extension fields that are configured in the tenant. Use this tool only when the user explicitly asks for this kind of document; for related documents use the dedicated list tools. If the document does not exist, the tool returns an empty object and you must tell the user that the document was not found instead of guessing values. Dates are returned in ISO 8601 format and amounts as decimal numbers together with the currency code. Authorization checks are performed with the identity of the current user, so missing fields can also mean that the user lacks authorization for them. Do not call this tool more than three times in a single turn; if you need more documents, ask the user to narrow down the request.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "Free text"
+            },
+            "top": {
+              "type": "number",
+              "description": "Maximum number of results, default 20"
+            }
+          },
+          "required": [
+            "query",
+            "top"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "get_rfq",
+        "description": "Read a single rfq by its key. The result contains all fields that the API returns, including administrative data such as created by, created on, last changed by and last changed on, as well as all extension fields that are configured in the tenant. Use this tool only when the user explicitly asks for this kind of document; for related documents use the dedicated list tools. If the document does not exist, the tool returns an empty object and you must tell the user that the document was not found instead of guessing values. Dates are returned in ISO 8601 format and amounts as decimal numbers together with the currency code. Authorization checks are performed with the identity of the current user, so missing fields can also mean that the user lacks authorization for them. Do not call this tool more than three times in a single turn; if you need more documents, ask the user to narrow down the request.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Key of the rfq. Leading zeros are optional; the tool adds them as required by the backend. Must not contain wildcards."
+            }
+          },
+          "required": [
+            "id"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "search_rfqs",
+        "description": "Search rfqs by free text and filters. The result contains all fields that the API returns, including administrative data such as created by, created on, last changed by and last changed on, as well as all extension fields that are configured in the tenant. Use this tool only when the user explicitly asks for this kind of document; for related documents use the dedicated list tools. If the document does not exist, the tool returns an empty object and you must tell the user that the document was not found instead of guessing values. Dates are returned in ISO 8601 format and amounts as decimal numbers together with the currency code. Authorization checks are performed with the identity of the current user, so missing fields can also mean that the user lacks authorization for them. Do not call this tool more than three times in a single turn; if you need more documents, ask the user to narrow down the request.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "Free text"
+            },
+            "top": {
+              "type": "number",
+              "description": "Maximum number of results, default 20"
+            }
+          },
+          "required": [
+            "query",
+            "top"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "get_supplier_quotation",
+        "description": "Read a single supplier quotation by its key. The result contains all fields that the API returns, including administrative data such as created by, created on, last changed by and last changed on, as well as all extension fields that are configured in the tenant. Use this tool only when the user explicitly asks for this kind of document; for related documents use the dedicated list tools. If the document does not exist, the tool returns an empty object and you must tell the user that the document was not found instead of guessing values. Dates are returned in ISO 8601 format and amounts as decimal numbers together with the currency code. Authorization checks are performed with the identity of the current user, so missing fields can also mean that the user lacks authorization for them. Do not call this tool more than three times in a single turn; if you need more documents, ask the user to narrow down the request.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Key of the supplier quotation. Leading zeros are optional; the tool adds them as required by the backend. Must not contain wildcards."
+            }
+          },
+          "required": [
+            "id"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "search_supplier_quotations",
+        "description": "Search supplier quotations by free text and filters. The result contains all fields that the API returns, including administrative data such as created by, created on, last changed by and last changed on, as well as all extension fields that are configured in the tenant. Use this tool only when the user explicitly asks for this kind of document; for related documents use the dedicated list tools. If the document does not exist, the tool returns an empty object and you must tell the user that the document was not found instead of guessing values. Dates are returned in ISO 8601 format and amounts as decimal numbers together with the currency code. Authorization checks are performed with the identity of the current user, so missing fields can also mean that the user lacks authorization for them. Do not call this tool more than three times in a single turn; if you need more documents, ask the user to narrow down the request.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "Free text"
+            },
+            "top": {
+              "type": "number",
+              "description": "Maximum number of results, default 20"
+            }
+          },
+          "required": [
+            "query",
+            "top"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "get_material",
+        "description": "Read a single material by its key. The result contains all fields that the API returns, including administrative data such as created by, created on, last changed by and last changed on, as well as all extension fields that are configured in the tenant. Use this tool only when the user explicitly asks for this kind of document; for related documents use the dedicated list tools. If the document does not exist, the tool returns an empty object and you must tell the user that the document was not found instead of guessing values. Dates are returned in ISO 8601 format and amounts as decimal numbers together with the currency code. Authorization checks are performed with the identity of the current user, so missing fields can also mean that the user lacks authorization for them. Do not call this tool more than three times in a single turn; if you need more documents, ask the user to narrow down the request.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Key of the material. Leading zeros are optional; the tool adds them as required by the backend. Must not contain wildcards."
+            }
+          },
+          "required": [
+            "id"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "search_materials",
+        "description": "Search materials by free text and filters. The result contains all fields that the API returns, including administrative data such as created by, created on, last changed by and last changed on, as well as all extension fields that are configured in the tenant. Use this tool only when the user explicitly asks for this kind of document; for related documents use the dedicated list tools. If the document does not exist, the tool returns an empty object and you must tell the user that the document was not found instead of guessing values. Dates are returned in ISO 8601 format and amounts as decimal numbers together with the currency code. Authorization checks are performed with the identity of the current user, so missing fields can also mean that the user lacks authorization for them. Do not call this tool more than three times in a single turn; if you need more documents, ask the user to narrow down the request.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "Free text"
+            },
+            "top": {
+              "type": "number",
+              "description": "Maximum number of results, default 20"
+            }
+          },
+          "required": [
+            "query",
+            "top"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "get_plant",
+        "description": "Read a single plant by its key. The result contains all fields that the API returns, including administrative data such as created by, created on, last changed by and last changed on, as well as all extension fields that are configured in the tenant. Use this tool only when the user explicitly asks for this kind of document; for related documents use the dedicated list tools. If the document does not exist, the tool returns an empty object and you must tell the user that the document was not found instead of guessing values. Dates are returned in ISO 8601 format and amounts as decimal numbers together with the currency code. Authorization checks are performed with the identity of the current user, so missing fields can also mean that the user lacks authorization for them. Do not call this tool more than three times in a single turn; if you need more documents, ask the user to narrow down the request.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Key of the plant. Leading zeros are optional; the tool adds them as required by the backend. Must not contain wildcards."
+            }
+          },
+          "required": [
+            "id"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "search_plants",
+        "description": "Search plants by free text and filters. The result contains all fields that the API returns, including administrative data such as created by, created on, last changed by and last changed on, as well as all extension fields that are configured in the tenant. Use this tool only when the user explicitly asks for this kind of document; for related documents use the dedicated list tools. If the document does not exist, the tool returns an empty object and you must tell the user that the document was not found instead of guessing values. Dates are returned in ISO 8601 format and amounts as decimal numbers together with the currency code. Authorization checks are performed with the identity of the current user, so missing fields can also mean that the user lacks authorization for them. Do not call this tool more than three times in a single turn; if you need more documents, ask the user to narrow down the request.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "Free text"
+            },
+            "top": {
+              "type": "number",
+              "description": "Maximum number of results, default 20"
+            }
+          },
+          "required": [
+            "query",
+            "top"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "get_storage_location",
+        "description": "Read a single storage location by its key. The result contains all fields that the API returns, including administrative data such as created by, created on, last changed by and last changed on, as well as all extension fields that are configured in the tenant. Use this tool only when the user explicitly asks for this kind of document; for related documents use the dedicated list tools. If the document does not exist, the tool returns an empty object and you must tell the user that the document was not found instead of guessing values. Dates are returned in ISO 8601 format and amounts as decimal numbers together with the currency code. Authorization checks are performed with the identity of the current user, so missing fields can also mean that the user lacks authorization for them. Do not call this tool more than three times in a single turn; if you need more documents, ask the user to narrow down the request.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Key of the storage location. Leading zeros are optional; the tool adds them as required by the backend. Must not contain wildcards."
+            }
+          },
+          "required": [
+            "id"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "search_storage_locations",
+        "description": "Search storage locations by free text and filters. The result contains all fields that the API returns, including administrative data such as created by, created on, last changed by and last changed on, as well as all extension fields that are configured in the tenant. Use this tool only when the user explicitly asks for this kind of document; for related documents use the dedicated list tools. If the document does not exist, the tool returns an empty object and you must tell the user that the document was not found instead of guessing values. Dates are returned in ISO 8601 format and amounts as decimal numbers together with the currency code. Authorization checks are performed with the identity of the current user, so missing fields can also mean that the user lacks authorization for them. Do not call this tool more than three times in a single turn; if you need more documents, ask the user to narrow down the request.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "Free text"
+            },
+            "top": {
+              "type": "number",
+              "description": "Maximum number of results, default 20"
+            }
+          },
+          "required": [
+            "query",
+            "top"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "get_cost_center",
+        "description": "Read a single cost center by its key. The result contains all fields that the API returns, including administrative data such as created by, created on, last changed by and last changed on, as well as all extension fields that are configured in the tenant. Use this tool only when the user explicitly asks for this kind of document; for related documents use the dedicated list tools. If the document does not exist, the tool returns an empty object and you must tell the user that the document was not found instead of guessing values. Dates are returned in ISO 8601 format and amounts as decimal numbers together with the currency code. Authorization checks are performed with the identity of the current user, so missing fields can also mean that the user lacks authorization for them. Do not call this tool more than three times in a single turn; if you need more documents, ask the user to narrow down the request.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Key of the cost center. Leading zeros are optional; the tool adds them as required by the backend. Must not contain wildcards."
+            }
+          },
+          "required": [
+            "id"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "search_cost_centers",
+        "description": "Search cost centers by free text and filters. The result contains all fields that the API returns, including administrative data such as created by, created on, last changed by and last changed on, as well as all extension fields that are configured in the tenant. Use this tool only when the user explicitly asks for this kind of document; for related documents use the dedicated list tools. If the document does not exist, the tool returns an empty object and you must tell the user that the document was not found instead of guessing values. Dates are returned in ISO 8601 format and amounts as decimal numbers together with the currency code. Authorization checks are performed with the identity of the current user, so missing fields can also mean that the user lacks authorization for them. Do not call this tool more than three times in a single turn; if you need more documents, ask the user to narrow down the request.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "Free text"
+            },
+            "top": {
+              "type": "number",
+              "description": "Maximum number of results, default 20"
+            }
+          },
+          "required": [
+            "query",
+            "top"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "get_wbs_element",
+        "description": "Read a single wbs element by its key. The result contains all fields that the API returns, including administrative data such as created by, created on, last changed by and last changed on, as well as all extension fields that are configured in the tenant. Use this tool only when the user explicitly asks for this kind of document; for related documents use the dedicated list tools. If the document does not exist, the tool returns an empty object and you must tell the user that the document was not found instead of guessing values. Dates are returned in ISO 8601 format and amounts as decimal numbers together with the currency code. Authorization checks are performed with the identity of the current user, so missing fields can also mean that the user lacks authorization for them. Do not call this tool more than three times in a single turn; if you need more documents, ask the user to narrow down the request.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Key of the wbs element. Leading zeros are optional; the tool adds them as required by the backend. Must not contain wildcards."
+            }
+          },
+          "required": [
+            "id"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "search_wbs_elements",
+        "description": "Search wbs elements by free text and filters. The result contains all fields that the API returns, including administrative data such as created by, created on, last changed by and last changed on, as well as all extension fields that are configured in the tenant. Use this tool only when the user explicitly asks for this kind of document; for related documents use the dedicated list tools. If the document does not exist, the tool returns an empty object and you must tell the user that the document was not found instead of guessing values. Dates are returned in ISO 8601 format and amounts as decimal numbers together with the currency code. Authorization checks are performed with the identity of the current user, so missing fields can also mean that the user lacks authorization for them. Do not call this tool more than three times in a single turn; if you need more documents, ask the user to narrow down the request.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "Free text"
+            },
+            "top": {
+              "type": "number",
+              "description": "Maximum number of results, default 20"
+            }
+          },
+          "required": [
+            "query",
+            "top"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "get_gl_account",
+        "description": "Read a single gl account by its key. The result contains all fields that the API returns, including administrative data such as created by, created on, last changed by and last changed on, as well as all extension fields that are configured in the tenant. Use this tool only when the user explicitly asks for this kind of document; for related documents use the dedicated list tools. If the document does not exist, the tool returns an empty object and you must tell the user that the document was not found instead of guessing values. Dates are returned in ISO 8601 format and amounts as decimal numbers together with the currency code. Authorization checks are performed with the identity of the current user, so missing fields can also mean that the user lacks authorization for them. Do not call this tool more than three times in a single turn; if you need more documents, ask the user to narrow down the request.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Key of the gl account. Leading zeros are optional; the tool adds them as required by the backend. Must not contain wildcards."
+            }
+          },
+          "required": [
+            "id"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "search_gl_accounts",
+        "description": "Search gl accounts by free text and filters. The result contains all fields that the API returns, including administrative data such as created by, created on, last changed by and last changed on, as well as all extension fields that are configured in the tenant. Use this tool only when the user explicitly asks for this kind of document; for related documents use the dedicated list tools. If the document does not exist, the tool returns an empty object and you must tell the user that the document was not found instead of guessing values. Dates are returned in ISO 8601 format and amounts as decimal numbers together with the currency code. Authorization checks are performed with the identity of the current user, so missing fields can also mean that the user lacks authorization for them. Do not call this tool more than three times in a single turn; if you need more documents, ask the user to narrow down the request.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "Free text"
+            },
+            "top": {
+              "type": "number",
+              "description": "Maximum number of results, default 20"
+            }
+          },
+          "required": [
+            "query",
+            "top"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "get_payment_run",
+        "description": "Read a single payment run by its key. The result contains all fields that the API returns, including administrative data such as created by, created on, last changed by and last changed on, as well as all extension fields that are configured in the tenant. Use this tool only when the user explicitly asks for this kind of document; for related documents use the dedicated list tools. If the document does not exist, the tool returns an empty object and you must tell the user that the document was not found instead of guessing values. Dates are returned in ISO 8601 format and amounts as decimal numbers together with the currency code. Authorization checks are performed with the identity of the current user, so missing fields can also mean that the user lacks authorization for them. Do not call this tool more than three times in a single turn; if you need more documents, ask the user to narrow down the request.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Key of the payment run. Leading zeros are optional; the tool adds them as required by the backend. Must not contain wildcards."
+            }
+          },
+          "required": [
+            "id"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "search_payment_runs",
+        "description": "Search payment runs by free text and filters. The result contains all fields that the API returns, including administrative data such as created by, created on, last changed by and last changed on, as well as all extension fields that are configured in the tenant. Use this tool only when the user explicitly asks for this kind of document; for related documents use the dedicated list tools. If the document does not exist, the tool returns an empty object and you must tell the user that the document was not found instead of guessing values. Dates are returned in ISO 8601 format and amounts as decimal numbers together with the currency code. Authorization checks are performed with the identity of the current user, so missing fields can also mean that the user lacks authorization for them. Do not call this tool more than three times in a single turn; if you need more documents, ask the user to narrow down the request.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "Free text"
+            },
+            "top": {
+              "type": "number",
+              "description": "Maximum number of results, default 20"
+            }
+          },
+          "required": [
+            "query",
+            "top"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "get_vendor_evaluation",
+        "description": "Read a single vendor evaluation by its key. The result contains all fields that the API returns, including administrative data such as created by, created on, last changed by and last changed on, as well as all extension fields that are configured in the tenant. Use this tool only when the user explicitly asks for this kind of document; for related documents use the dedicated list tools. If the document does not exist, the tool returns an empty object and you must tell the user that the document was not found instead of guessing values. Dates are returned in ISO 8601 format and amounts as decimal numbers together with the currency code. Authorization checks are performed with the identity of the current user, so missing fields can also mean that the user lacks authorization for them. Do not call this tool more than three times in a single turn; if you need more documents, ask the user to narrow down the request.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Key of the vendor evaluation. Leading zeros are optional; the tool adds them as required by the backend. Must not contain wildcards."
+            }
+          },
+          "required": [
+            "id"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "search_vendor_evaluations",
+        "description": "Search vendor evaluations by free text and filters. The result contains all fields that the API returns, including administrative data such as created by, created on, last changed by and last changed on, as well as all extension fields that are configured in the tenant. Use this tool only when the user explicitly asks for this kind of document; for related documents use the dedicated list tools. If the document does not exist, the tool returns an empty object and you must tell the user that the document was not found instead of guessing values. Dates are returned in ISO 8601 format and amounts as decimal numbers together with the currency code. Authorization checks are performed with the identity of the current user, so missing fields can also mean that the user lacks authorization for them. Do not call this tool more than three times in a single turn; if you need more documents, ask the user to narrow down the request.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "Free text"
+            },
+            "top": {
+              "type": "number",
+              "description": "Maximum number of results, default 20"
+            }
+          },
+          "required": [
+            "query",
+            "top"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "get_source_list",
+        "description": "Read a single source list by its key. The result contains all fields that the API returns, including administrative data such as created by, created on, last changed by and last changed on, as well as all extension fields that are configured in the tenant. Use this tool only when the user explicitly asks for this kind of document; for related documents use the dedicated list tools. If the document does not exist, the tool returns an empty object and you must tell the user that the document was not found instead of guessing values. Dates are returned in ISO 8601 format and amounts as decimal numbers together with the currency code. Authorization checks are performed with the identity of the current user, so missing fields can also mean that the user lacks authorization for them. Do not call this tool more than three times in a single turn; if you need more documents, ask the user to narrow down the request.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Key of the source list. Leading zeros are optional; the tool adds them as required by the backend. Must not contain wildcards."
+            }
+          },
+          "required": [
+            "id"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "search_source_lists",
+        "description": "Search source lists by free text and filters. The result contains all fields that the API returns, including administrative data such as created by, created on, last changed by and last changed on, as well as all extension fields that are configured in the tenant. Use this tool only when the user explicitly asks for this kind of document; for related documents use the dedicated list tools. If the document does not exist, the tool returns an empty object and you must tell the user that the document was not found instead of guessing values. Dates are returned in ISO 8601 format and amounts as decimal numbers together with the currency code. Authorization checks are performed with the identity of the current user, so missing fields can also mean that the user lacks authorization for them. Do not call this tool more than three times in a single turn; if you need more documents, ask the user to narrow down the request.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "Free text"
+            },
+            "top": {
+              "type": "number",
+              "description": "Maximum number of results, default 20"
+            }
+          },
+          "required": [
+            "query",
+            "top"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "get_info_record",
+        "description": "Read a single info record by its key. The result contains all fields that the API returns, including administrative data such as created by, created on, last changed by and last changed on, as well as all extension fields that are configured in the tenant. Use this tool only when the user explicitly asks for this kind of document; for related documents use the dedicated list tools. If the document does not exist, the tool returns an empty object and you must tell the user that the document was not found instead of guessing values. Dates are returned in ISO 8601 format and amounts as decimal numbers together with the currency code. Authorization checks are performed with the identity of the current user, so missing fields can also mean that the user lacks authorization for them. Do not call this tool more than three times in a single turn; if you need more documents, ask the user to narrow down the request.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Key of the info record. Leading zeros are optional; the tool adds them as required by the backend. Must not contain wildcards."
+            }
+          },
+          "required": [
+            "id"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "search_info_records",
+        "description": "Search info records by free text and filters. The result contains all fields that the API returns, including administrative data such as created by, created on, last changed by and last changed on, as well as all extension fields that are configured in the tenant. Use this tool only when the user explicitly asks for this kind of document; for related documents use the dedicated list tools. If the document does not exist, the tool returns an empty object and you must tell the user that the document was not found instead of guessing values. Dates are returned in ISO 8601 format and amounts as decimal numbers together with the currency code. Authorization checks are performed with the identity of the current user, so missing fields can also mean that the user lacks authorization for them. Do not call this tool more than three times in a single turn; if you need more documents, ask the user to narrow down the request.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "Free text"
+            },
+            "top": {
+              "type": "number",
+              "description": "Maximum number of results, default 20"
+            }
+          },
+          "required": [
+            "query",
+            "top"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "get_service_entry_sheet",
+        "description": "Read a single service entry sheet by its key. The result contains all fields that the API returns, including administrative data such as created by, created on, last changed by and last changed on, as well as all extension fields that are configured in the tenant. Use this tool only when the user explicitly asks for this kind of document; for related documents use the dedicated list tools. If the document does not exist, the tool returns an empty object and you must tell the user that the document was not found instead of guessing values. Dates are returned in ISO 8601 format and amounts as decimal numbers together with the currency code. Authorization checks are performed with the identity of the current user, so missing fields can also mean that the user lacks authorization for them. Do not call this tool more than three times in a single turn; if you need more documents, ask the user to narrow down the request.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Key of the service entry sheet. Leading zeros are optional; the tool adds them as required by the backend. Must not contain wildcards."
+            }
+          },
+          "required": [
+            "id"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "search_service_entry_sheets",
+        "description": "Search service entry sheets by free text and filters. The result contains all fields that the API returns, including administrative data such as created by, created on, last changed by and last changed on, as well as all extension fields that are configured in the tenant. Use this tool only when the user explicitly asks for this kind of document; for related documents use the dedicated list tools. If the document does not exist, the tool returns an empty object and you must tell the user that the document was not found instead of guessing values. Dates are returned in ISO 8601 format and amounts as decimal numbers together with the currency code. Authorization checks are performed with the identity of the current user, so missing fields can also mean that the user lacks authorization for them. Do not call this tool more than three times in a single turn; if you need more documents, ask the user to narrow down the request.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "Free text"
+            },
+            "top": {
+              "type": "number",
+              "description": "Maximum number of results, default 20"
+            }
+          },
+          "required": [
+            "query",
+            "top"
+          ]
+        }
+      }
+    }
+  ]
+}

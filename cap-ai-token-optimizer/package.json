@@ -1,0 +1,133 @@
+{
+  "name": "@viveka/cap-ai-token-optimizer",
+  "version": "0.1.0",
+  "description": "Reduce, measure and report SAP AI Core token usage in SAP CAP Node.js apps: prompt optimization, response cache, metrics for SAP Cloud ALM / OpenTelemetry, HTTP and HANA",
+  "keywords": [
+    "sap",
+    "cap",
+    "cds",
+    "cds-plugin",
+    "sap-ai-core",
+    "sap-ai-sdk",
+    "generative-ai",
+    "llm",
+    "tokens",
+    "token-optimization",
+    "prompt",
+    "cache",
+    "opentelemetry",
+    "cloud-alm",
+    "mcp",
+    "agents",
+    "langchain",
+    "btp"
+  ],
+  "homepage": "https://github.com/viveka10/npm_token_optimizer/tree/main/cap-ai-token-optimizer#readme",
+  "bugs": {
+    "url": "https://github.com/viveka10/npm_token_optimizer/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/viveka10/npm_token_optimizer.git",
+    "directory": "cap-ai-token-optimizer"
+  },
+  "license": "MIT",
+  "author": "Vivekanandhan Srinivasan",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.js"
+    },
+    "./cds-plugin": "./cds-plugin.js",
+    "./cds-plugin.js": "./cds-plugin.js",
+    "./db/*": "./db/*",
+    "./srv/*": "./srv/*",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "cds-plugin.js",
+    "lib/",
+    "srv/",
+    "db/",
+    "docs/",
+    "CHANGELOG.md",
+    "SECURITY.md"
+  ],
+  "engines": {
+    "node": ">=22.12"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
+    "test:unit": "node --experimental-vm-modules node_modules/jest/bin/jest.js test/unit",
+    "test:integration": "node --experimental-vm-modules node_modules/jest/bin/jest.js test/integration",
+    "lint": "eslint .",
+    "mock:aicore": "node test/mock-aicore/server.js",
+    "bench": "node bench/run.js",
+    "test:live": "RUN_LIVE_TESTS=1 node --experimental-vm-modules node_modules/jest/bin/jest.js test/live",
+    "test:smoke": "node --test test/smoke/smoke.js",
+    "check:pack": "node scripts/check-pack.js",
+    "prepublishOnly": "npm run check:pack"
+  },
+  "cds": {
+    "requires": {
+      "tokenOptimizer": {
+        "kind": "token-optimizer"
+      }
+    }
+  },
+  "dependencies": {
+    "js-tiktoken": "^1.0.21"
+  },
+  "peerDependencies": {
+    "@sap/cds": "^9 || ^10",
+    "@sap-ai-sdk/orchestration": "^2.8.0",
+    "@sap-ai-sdk/foundation-models": "^2.8.0",
+    "@sap-ai-sdk/langchain": "^2.16.0",
+    "@sap-cloud-sdk/connectivity": "^4",
+    "@opentelemetry/api": "^1.4"
+  },
+  "peerDependenciesMeta": {
+    "@sap/cds": {
+      "optional": true
+    },
+    "@sap-ai-sdk/orchestration": {
+      "optional": true
+    },
+    "@sap-ai-sdk/foundation-models": {
+      "optional": true
+    },
+    "@sap-ai-sdk/langchain": {
+      "optional": true
+    },
+    "@sap-cloud-sdk/connectivity": {
+      "optional": true
+    },
+    "@opentelemetry/api": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.5",
+    "@langchain/core": "^1.2.12",
+    "@opentelemetry/api": "^1.9.0",
+    "@opentelemetry/context-async-hooks": "^2.11.0",
+    "@opentelemetry/sdk-metrics": "^2.11.0",
+    "@opentelemetry/sdk-trace-base": "^2.11.0",
+    "@sap-ai-sdk/foundation-models": "^2.16.0",
+    "@sap-ai-sdk/langchain": "^2.16.0",
+    "@sap-ai-sdk/orchestration": "^2.16.0",
+    "@sap/cds": "^10.1.1",
+    "eslint": "^9.39.5",
+    "express": "^5.3.0",
+    "globals": "^17.13.0",
+    "jest": "^30.5.2",
+    "langchain": "^1.5.12"
+  }
+}

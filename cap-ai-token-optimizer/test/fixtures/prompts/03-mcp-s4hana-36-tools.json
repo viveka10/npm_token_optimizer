@@ -1,0 +1,947 @@
+{
+  "name": "03-mcp-s4hana-36-tools",
+  "description": "MCP agent with 36 S/4HANA tools and six tool-calling turns (tools: selection).",
+  "useCase": "o2c-agent",
+  "model": "gpt-4.1",
+  "params": {
+    "temperature": 0
+  },
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are an order-to-cash agent connected to SAP S/4HANA Cloud through MCP tools.\n\nUse only data returned by the tools. Ask for confirmation before changing documents."
+    },
+    {
+      "role": "user",
+      "content": "What is the status of sales order 4711?"
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "tool_calls": [
+        {
+          "id": "call_1",
+          "type": "function",
+          "function": {
+            "name": "get_sales_order_status",
+            "arguments": "{\n  \"salesOrder\": \"4711\"\n}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_1",
+      "content": "{\n  \"salesOrder\": \"4711\",\n  \"deliveryStatus\": \"C\",\n  \"billingStatus\": \"A\",\n  \"creditStatus\": \"A\",\n  \"overallStatus\": \"In Process\"\n}"
+    },
+    {
+      "role": "assistant",
+      "content": "Sales order 4711 is partially delivered and not yet billed."
+    },
+    {
+      "role": "user",
+      "content": "What is the status of sales order 4723?"
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "tool_calls": [
+        {
+          "id": "call_2",
+          "type": "function",
+          "function": {
+            "name": "get_sales_order_status",
+            "arguments": "{\n  \"salesOrder\": \"4723\"\n}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_2",
+      "content": "{\n  \"salesOrder\": \"4723\",\n  \"deliveryStatus\": \"B\",\n  \"billingStatus\": \"C\",\n  \"creditStatus\": \"A\",\n  \"overallStatus\": \"Completed\"\n}"
+    },
+    {
+      "role": "assistant",
+      "content": "Sales order 4723 is fully delivered and billed."
+    },
+    {
+      "role": "user",
+      "content": "What is the status of sales order 4730?"
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "tool_calls": [
+        {
+          "id": "call_3",
+          "type": "function",
+          "function": {
+            "name": "get_sales_order_status",
+            "arguments": "{\n  \"salesOrder\": \"4730\"\n}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_3",
+      "content": "{\n  \"salesOrder\": \"4730\",\n  \"deliveryStatus\": \"A\",\n  \"billingStatus\": \"B\",\n  \"creditStatus\": \"A\",\n  \"overallStatus\": \"Open\"\n}"
+    },
+    {
+      "role": "assistant",
+      "content": "Sales order 4730 is open, nothing delivered yet."
+    },
+    {
+      "role": "user",
+      "content": "What is the status of sales order 4741?"
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "tool_calls": [
+        {
+          "id": "call_4",
+          "type": "function",
+          "function": {
+            "name": "get_sales_order_status",
+            "arguments": "{\n  \"salesOrder\": \"4741\"\n}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_4",
+      "content": "{\n  \"salesOrder\": \"4741\",\n  \"deliveryStatus\": \"C\",\n  \"billingStatus\": \"A\",\n  \"creditStatus\": \"A\",\n  \"overallStatus\": \"In Process\"\n}"
+    },
+    {
+      "role": "assistant",
+      "content": "Sales order 4741 is partially delivered and not yet billed."
+    },
+    {
+      "role": "user",
+      "content": "What is the status of sales order 4752?"
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "tool_calls": [
+        {
+          "id": "call_5",
+          "type": "function",
+          "function": {
+            "name": "get_sales_order_status",
+            "arguments": "{\n  \"salesOrder\": \"4752\"\n}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_5",
+      "content": "{\n  \"salesOrder\": \"4752\",\n  \"deliveryStatus\": \"B\",\n  \"billingStatus\": \"C\",\n  \"creditStatus\": \"A\",\n  \"overallStatus\": \"Completed\"\n}"
+    },
+    {
+      "role": "assistant",
+      "content": "Sales order 4752 is fully delivered and billed."
+    },
+    {
+      "role": "user",
+      "content": "What is the status of sales order 4760?"
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "tool_calls": [
+        {
+          "id": "call_6",
+          "type": "function",
+          "function": {
+            "name": "get_sales_order_status",
+            "arguments": "{\n  \"salesOrder\": \"4760\"\n}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_6",
+      "content": "{\n  \"salesOrder\": \"4760\",\n  \"deliveryStatus\": \"A\",\n  \"billingStatus\": \"B\",\n  \"creditStatus\": \"A\",\n  \"overallStatus\": \"Open\"\n}"
+    },
+    {
+      "role": "assistant",
+      "content": "Sales order 4760 is open, nothing delivered yet."
+    },
+    {
+      "role": "user",
+      "content": "Check stock of material TG11 in plant 1010 and tell me if we can deliver 50 pieces next week."
+    }
+  ],
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "get_sales_order",
+        "description": "Read a sales order header with sold-to party, net value, currency, overall status and requested delivery date.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "salesOrder": {
+              "type": "string",
+              "description": "Sales order number"
+            }
+          },
+          "required": [
+            "salesOrder"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "list_sales_order_items",
+        "description": "List items of a sales order with material, quantity, unit and net value.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "salesOrder": {
+              "type": "string",
+              "description": "Sales order number"
+            }
+          },
+          "required": [
+            "salesOrder"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "get_sales_order_status",
+        "description": "Read delivery, billing and credit status of a sales order.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "salesOrder": {
+              "type": "string",
+              "description": "Sales order number"
+            }
+          },
+          "required": [
+            "salesOrder"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "create_sales_order",
+        "description": "Create a standard sales order. Only call after the user confirmed all values.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "soldToParty": {
+              "type": "string",
+              "description": "Customer number"
+            },
+            "material": {
+              "type": "string",
+              "description": "Material"
+            },
+            "quantity": {
+              "type": "number",
+              "description": "Quantity"
+            }
+          },
+          "required": [
+            "soldToParty",
+            "material",
+            "quantity"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "change_sales_order_delivery_date",
+        "description": "Change the requested delivery date. Requires confirmation.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "salesOrder": {
+              "type": "string",
+              "description": "Sales order number"
+            },
+            "date": {
+              "type": "string",
+              "description": "ISO date"
+            }
+          },
+          "required": [
+            "salesOrder",
+            "date"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "cancel_sales_order",
+        "description": "Reject all open items of a sales order. Requires confirmation.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "salesOrder": {
+              "type": "string",
+              "description": "Sales order number"
+            },
+            "reason": {
+              "type": "string",
+              "description": "Rejection reason"
+            }
+          },
+          "required": [
+            "salesOrder",
+            "reason"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "get_customer",
+        "description": "Read a business partner in the customer role.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "customer": {
+              "type": "string",
+              "description": "Customer number"
+            }
+          },
+          "required": [
+            "customer"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "search_customers",
+        "description": "Search customers by name, city or country.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "Search text"
+            }
+          },
+          "required": [
+            "query"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "get_customer_credit_exposure",
+        "description": "Read credit limit and exposure of a customer.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "customer": {
+              "type": "string",
+              "description": "Customer number"
+            }
+          },
+          "required": [
+            "customer"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "list_open_items",
+        "description": "List open receivables of a customer with due dates and dunning level.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "customer": {
+              "type": "string",
+              "description": "Customer number"
+            }
+          },
+          "required": [
+            "customer"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "get_billing_document",
+        "description": "Read a billing document with amounts and accounting status.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "billingDocument": {
+              "type": "string",
+              "description": "Billing document"
+            }
+          },
+          "required": [
+            "billingDocument"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "list_billing_documents_for_order",
+        "description": "List billing documents for a sales order.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "salesOrder": {
+              "type": "string",
+              "description": "Sales order number"
+            }
+          },
+          "required": [
+            "salesOrder"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "get_outbound_delivery",
+        "description": "Read an outbound delivery with picking and goods issue status.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "delivery": {
+              "type": "string",
+              "description": "Delivery"
+            }
+          },
+          "required": [
+            "delivery"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "list_deliveries_for_order",
+        "description": "List outbound deliveries for a sales order.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "salesOrder": {
+              "type": "string",
+              "description": "Sales order number"
+            }
+          },
+          "required": [
+            "salesOrder"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "post_goods_issue",
+        "description": "Post goods issue for a delivery. Requires confirmation.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "delivery": {
+              "type": "string",
+              "description": "Delivery"
+            }
+          },
+          "required": [
+            "delivery"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "get_material",
+        "description": "Read a product master record.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "material": {
+              "type": "string",
+              "description": "Material"
+            }
+          },
+          "required": [
+            "material"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "get_material_stock",
+        "description": "Read stock per plant and storage location.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "material": {
+              "type": "string",
+              "description": "Material"
+            },
+            "plant": {
+              "type": "string",
+              "description": "Plant"
+            }
+          },
+          "required": [
+            "material",
+            "plant"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "check_availability",
+        "description": "Run an ATP check for a material, quantity and date.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "material": {
+              "type": "string",
+              "description": "Material"
+            },
+            "plant": {
+              "type": "string",
+              "description": "Plant"
+            },
+            "quantity": {
+              "type": "number",
+              "description": "Quantity"
+            },
+            "date": {
+              "type": "string",
+              "description": "Date"
+            }
+          },
+          "required": [
+            "material",
+            "plant",
+            "quantity",
+            "date"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "get_price",
+        "description": "Simulate pricing for a customer and material.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "customer": {
+              "type": "string",
+              "description": "Customer"
+            },
+            "material": {
+              "type": "string",
+              "description": "Material"
+            },
+            "quantity": {
+              "type": "number",
+              "description": "Quantity"
+            }
+          },
+          "required": [
+            "customer",
+            "material",
+            "quantity"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "get_purchase_order",
+        "description": "Read a purchase order with supplier and schedule lines.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "purchaseOrder": {
+              "type": "string",
+              "description": "Purchase order"
+            }
+          },
+          "required": [
+            "purchaseOrder"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "list_purchase_orders_for_material",
+        "description": "List open purchase orders for a material.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "material": {
+              "type": "string",
+              "description": "Material"
+            }
+          },
+          "required": [
+            "material"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "get_supplier",
+        "description": "Read a business partner in the supplier role.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "supplier": {
+              "type": "string",
+              "description": "Supplier"
+            }
+          },
+          "required": [
+            "supplier"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "get_supplier_invoice",
+        "description": "Read a supplier invoice with payment block.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "invoice": {
+              "type": "string",
+              "description": "Invoice"
+            },
+            "fiscalYear": {
+              "type": "string",
+              "description": "Fiscal year"
+            }
+          },
+          "required": [
+            "invoice",
+            "fiscalYear"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "get_journal_entry",
+        "description": "Read a journal entry with line items.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "accountingDocument": {
+              "type": "string",
+              "description": "Document"
+            },
+            "companyCode": {
+              "type": "string",
+              "description": "Company code"
+            },
+            "fiscalYear": {
+              "type": "string",
+              "description": "Fiscal year"
+            }
+          },
+          "required": [
+            "accountingDocument",
+            "companyCode",
+            "fiscalYear"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "get_cost_center",
+        "description": "Read a cost center.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "costCenter": {
+              "type": "string",
+              "description": "Cost center"
+            }
+          },
+          "required": [
+            "costCenter"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "get_exchange_rate",
+        "description": "Read an exchange rate for a date.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "from": {
+              "type": "string",
+              "description": "From currency"
+            },
+            "to": {
+              "type": "string",
+              "description": "To currency"
+            },
+            "date": {
+              "type": "string",
+              "description": "Date"
+            }
+          },
+          "required": [
+            "from",
+            "to",
+            "date"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "create_customer_note",
+        "description": "Attach a note to a customer. Requires confirmation.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "customer": {
+              "type": "string",
+              "description": "Customer"
+            },
+            "text": {
+              "type": "string",
+              "description": "Text"
+            }
+          },
+          "required": [
+            "customer",
+            "text"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "send_order_confirmation",
+        "description": "Send the order confirmation by email. Requires confirmation.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "salesOrder": {
+              "type": "string",
+              "description": "Sales order number"
+            }
+          },
+          "required": [
+            "salesOrder"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "get_shipping_tracking",
+        "description": "Read carrier tracking for a delivery.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "delivery": {
+              "type": "string",
+              "description": "Delivery"
+            }
+          },
+          "required": [
+            "delivery"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "list_returns_for_customer",
+        "description": "List customer returns with refund status.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "customer": {
+              "type": "string",
+              "description": "Customer"
+            }
+          },
+          "required": [
+            "customer"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "get_contract",
+        "description": "Read a sales contract with validity and released quantity.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "contract": {
+              "type": "string",
+              "description": "Contract"
+            }
+          },
+          "required": [
+            "contract"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "get_company_code",
+        "description": "Read company code settings.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "companyCode": {
+              "type": "string",
+              "description": "Company code"
+            }
+          },
+          "required": [
+            "companyCode"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "get_plant",
+        "description": "Read plant address and factory calendar.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "plant": {
+              "type": "string",
+              "description": "Plant"
+            }
+          },
+          "required": [
+            "plant"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "list_quotations_for_customer",
+        "description": "List open sales quotations of a customer.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "customer": {
+              "type": "string",
+              "description": "Customer"
+            }
+          },
+          "required": [
+            "customer"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "get_quotation",
+        "description": "Read a sales quotation with validity and items.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "quotation": {
+              "type": "string",
+              "description": "Quotation"
+            }
+          },
+          "required": [
+            "quotation"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "convert_quotation_to_order",
+        "description": "Create a sales order from a quotation. Requires confirmation.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "quotation": {
+              "type": "string",
+              "description": "Quotation"
+            }
+          },
+          "required": [
+            "quotation"
+          ]
+        }
+      }
+    }
+  ]
+}
