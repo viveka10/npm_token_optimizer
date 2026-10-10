@@ -1,7 +1,7 @@
 {
   "name": "@viveka10/cap-ai-token-optimizer",
-  "version": "0.1.0",
-  "description": "Reduce, measure and report SAP AI Core token usage in SAP CAP Node.js apps: prompt optimization, response cache, metrics for SAP Cloud ALM / OpenTelemetry, HTTP and HANA",
+  "version": "0.1.1",
+  "description": "SAP CAP plugin to reduce, measure and report SAP AI Core LLM token usage: prompt optimization, response cache, cost tracking, and metrics for SAP Cloud ALM / OpenTelemetry",
   "keywords": [
     "sap",
     "cap",
@@ -20,7 +20,17 @@
     "mcp",
     "agents",
     "langchain",
-    "btp"
+    "btp",
+    "sap-cap",
+    "sap-btp",
+    "sap-ai",
+    "token-optimizer",
+    "ai-token-optimization",
+    "prompt-optimization",
+    "llm-cost",
+    "cost-optimization",
+    "openai",
+    "observability"
   ],
   "homepage": "https://github.com/viveka10/npm_token_optimizer/tree/main/cap-ai-token-optimizer#readme",
   "bugs": {

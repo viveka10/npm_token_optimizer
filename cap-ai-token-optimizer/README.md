@@ -5,7 +5,12 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/viveka10/npm_token_optimizer/blob/main/cap-ai-token-optimizer/LICENSE)
 ![Node](https://img.shields.io/node/v/@viveka10/cap-ai-token-optimizer)
 
-Reduce, measure and report the tokens your SAP CAP Node.js app spends on SAP AI Core.
+**SAP CAP plugin** that reduces, measures and reports the LLM tokens your SAP CAP Node.js app
+spends on **SAP AI Core**, and with them your generative AI costs.
+
+```sh
+npm add @viveka10/cap-ai-token-optimizer
+```
 
 - **Optimize** prompts without changing what they mean: whitespace and JSON, duplicate
   instructions, long histories, large tool lists, output limits, and an exact-match response cache.
@@ -20,6 +25,8 @@ Node.js. Wraps the SAP Cloud SDK for AI (`@sap-ai-sdk/orchestration`, `@sap-ai-s
 > **Status: pre-release.** Not affiliated with or endorsed by SAP.
 
 **New here?** [Add it to an existing CAP app in 5 minutes](https://github.com/viveka10/npm_token_optimizer/blob/main/cap-ai-token-optimizer/docs/integration-guide.md): no code changes needed.
+Deploying on SAP BTP with an AI Core binding and SAP Cloud ALM? See
+[Existing CAP app on SAP BTP](https://github.com/viveka10/npm_token_optimizer/blob/main/cap-ai-token-optimizer/docs/existing-cap-app-on-btp.md).
 
 **Contents:** [Requirements](#requirements) · [Setup](#setup) · [Usage](#usage) ·
 [Existing code and LangChain](#instrumenting-existing-code-and-langchain) · [Compatibility](#compatibility) ·

@@ -6,6 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-10-10
+
+### Added
+
+- Guide "Add to an existing CAP app on SAP BTP" (`docs/existing-cap-app-on-btp.md`): AI Core
+  service binding, `mta.yaml`, secrets, HANA usage log, admin role, and SAP Cloud ALM setup.
+
+### Changed
+
+- Package description, keywords and README introduction, so the package is easier to find.
+
 ## [0.1.0] - 2026-10-10
 
 First public release.
@@ -67,5 +78,6 @@ First public release.
 - The `http` exporter supports Internet destinations only.
 - Not yet verified against SAP Cloud ALM; live AI Core tests are opt-in.
 
-[Unreleased]: https://github.com/viveka10/npm_token_optimizer/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/viveka10/npm_token_optimizer/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/viveka10/npm_token_optimizer/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/viveka10/npm_token_optimizer/releases/tag/v0.1.0
