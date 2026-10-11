@@ -179,9 +179,10 @@ the `db` exporter:
 "[production]": { "metrics": { "exporters": ["console", "otel", "db"] }, "admin": { "enabled": true } }
 ```
 
-- The plugin adds the entity `cap.ai.token_optimizer.TokenUsageLog` to your model. It is
-  deployed with your normal HANA deployment (the `db-deployer` module in the MTA), so there's
-  no extra step.
+- The plugin adds the entity `cap.ai.token_optimizer.TokenUsageLog` to your model, also in
+  `cds build --production`. It is deployed with your normal HANA deployment (the `db-deployer`
+  module in the MTA), so there's no extra step. With version 0.1.1 the entity was missing from
+  `cds build`; there, list the models in `cds.requires.tokenOptimizer.model` as a workaround.
 - **Multitenant apps (MTX):** each tenant's rows go to that tenant's container. Run your
   usual tenant upgrade after deploying, so existing tenants get the new table.
 - Rows older than 30 days are deleted (`metrics.db.retentionDays`). No prompt or answer text

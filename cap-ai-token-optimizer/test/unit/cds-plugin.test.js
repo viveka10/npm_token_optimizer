@@ -29,7 +29,7 @@ describe('cds-plugin', () => {
     }
   })
 
-  test('adds the admin service model and applies the configured role', () => {
+  test('applies the configured role to the admin service', () => {
     const handlers = {}
     globalThis.cds = {
       env: { requires: { tokenOptimizer: { admin: { enabled: true, role: 'Ops' }, metrics: { exporters: [] } } } },
@@ -37,16 +37,18 @@ describe('cds-plugin', () => {
       once () {}
     }
     require('../../cds-plugin')
-    expect(globalThis.cds.env.requires.tokenOptimizer.model).toEqual([require('node:path').resolve(__dirname, '../../srv/admin-service')])
+    // the models come from .cdsrc.js (see test/integration/cds-models.test.js), not from the plugin
+    expect(globalThis.cds.env.requires.tokenOptimizer.model).toBeUndefined()
     const csn = { definitions: { TokenOptimizerService: { '@requires': 'TokenOptimizerAdmin' } } }
     handlers.loaded(csn)
     handlers.loaded({})
     expect(csn.definitions.TokenOptimizerService['@requires']).toBe('Ops')
   })
 
-  test('no admin service unless enabled', () => {
-    globalThis.cds = { env: { requires: { tokenOptimizer: { metrics: { exporters: [] } } } }, on () {}, once () {} }
+  test('no role handler unless the admin service is enabled', () => {
+    const handlers = {}
+    globalThis.cds = { env: { requires: { tokenOptimizer: { metrics: { exporters: [] } } } }, on: (evt, fn) => { handlers[evt] = fn }, once () {} }
     require('../../cds-plugin')
-    expect(globalThis.cds.env.requires.tokenOptimizer.model).toBeUndefined()
+    expect(handlers.loaded).toBeUndefined()
   })
 })

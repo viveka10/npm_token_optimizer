@@ -436,9 +436,10 @@ optimizer.configure({
 })
 ```
 
-The `db` exporter and the admin service also need their CDS models, which the plugin adds
-only when they are enabled in `cds.env` at startup. Enable them in the configuration, not
-only in code.
+The `db` exporter and the admin service also need their CDS models. The plugin adds them to
+the app's model (also in `cds build` and `cds deploy`) when they are enabled in the
+configuration, including profiles and environment variables. Enable them in the
+configuration, not only in code.
 
 `createOptimizer(config)` creates a separate instance with its own stats and exporters.
 
@@ -558,7 +559,8 @@ Writes one row per call to the entity `cap.ai.token_optimizer.TokenUsageLog`
 (table `CAP_AI_TOKEN_OPTIMIZER_TOKENUSAGELOG`) through CAP's database service.
 
 - **Databases:** SAP HANA, SQLite or PostgreSQL. `hana` is an alias for `db`.
-- **Model:** the plugin adds the entity to your model when the exporter is configured.
+- **Model:** the plugin adds the entity to your model when the exporter is configured, also in
+  `cds build`, so it is part of the MTA's db deployer.
   Deploy as usual (`cds deploy`, or the MTA db deployer), and run your MTX upgrade for multitenant apps.
 - **Multitenancy:** rows are inserted in batches on the flush interval with a privileged
   user. Each tenant's rows go to its own container.

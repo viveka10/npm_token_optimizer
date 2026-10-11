@@ -60,6 +60,7 @@
     "index.js",
     "index.d.ts",
     "cds-plugin.js",
+    ".cdsrc.js",
     "lib/",
     "srv/",
     "db/",

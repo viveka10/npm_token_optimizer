@@ -24,7 +24,7 @@ const FORBIDDEN = [
   [/\.(sqlite|db|tgz|log)$/i, 'database, archive or log file']
 ]
 
-const REQUIRED = ['package.json', 'README.md', 'LICENSE', 'CHANGELOG.md', 'index.js', 'index.d.ts', 'cds-plugin.js']
+const REQUIRED = ['package.json', 'README.md', 'LICENSE', 'CHANGELOG.md', 'index.js', 'index.d.ts', 'cds-plugin.js', '.cdsrc.js']
 
 const SECRETS = [
   [/"clientsecret"\s*:\s*"[^"$<{]{8,}"/i, 'client secret'],

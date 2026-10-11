@@ -15,6 +15,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Errors inside a stream** were not recorded, and the call counted as a success. They are now
   recorded as errors and classified from the error event AI Core sends (for example `SERVER`,
   `RATE_LIMIT`, `CONTENT_FILTER`).
+- **`cds build` and `cds deploy` left out the plugin's models.** The `TokenUsageLog` entity and
+  the admin service were added to `cds.env` when the plugin loaded, but `cds build` rebuilds
+  `cds.env` afterwards, so the MTA had no usage-log table and no admin service. The models now
+  come from the plugin's `.cdsrc.js` and are computed from the app's final configuration
+  (profiles and environment variables included). Apps that worked around this by listing the
+  models in `cds.requires.tokenOptimizer.model` keep working and can remove the list.
 
 ### Changed
 

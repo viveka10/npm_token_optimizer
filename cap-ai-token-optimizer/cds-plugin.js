@@ -6,35 +6,21 @@
 const cds = globalThis.cds ?? require('@sap/cds')
 const { optimizer, countText } = require('./index')
 const log = require('./lib/util/log')
-const path = require('node:path')
 
 try {
   optimizer.configure(cds.env.requires?.tokenOptimizer)
   log.debug('configured, mode =', optimizer.config.mode, 'exporters =', optimizer.config.metrics.exporters)
-  setupModels(optimizer.config)
+  setupAdminRole(optimizer.config)
 } catch (e) {
   log.error('could not configure token optimizer:', e?.message)
 }
 
 /**
- * Add our CDS models to the app's model when the features using them are enabled:
- * the TokenUsageLog entity for the db exporter, the read-only admin service, and the
- * UsageLog projection when both are on. Plugins load before the model, so adding a `model`
- * to our cds.requires entry is enough.
+ * The CDS models (usage log entity, admin service) are added through `model` in .cdsrc.js, so
+ * they are also part of `cds build` and `cds deploy`. Here we only set the admin service's role.
  */
-function setupModels (cfg) {
-  const exporters = cfg.metrics.exporters ?? []
-  const dbLog = exporters.includes('db') || exporters.includes('hana')
-  const admin = cfg.admin?.enabled
-  const models = []
-  if (dbLog) models.push('db/token-usage-log')
-  if (admin) models.push('srv/admin-service')
-  if (admin && dbLog) models.push('srv/admin-usage-log')
-  if (!models.length) return
-
-  const req = cds.env.requires.tokenOptimizer ??= {}
-  req.model = [...new Set([].concat(req.model ?? [], models.map(m => path.join(__dirname, m))))]
-  if (!admin) return
+function setupAdminRole (cfg) {
+  if (!cfg.admin?.enabled) return
   const role = cfg.admin.role || 'TokenOptimizerAdmin'
   cds.on('loaded', (csn) => {
     const srv = csn?.definitions?.TokenOptimizerService
