@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.2] - 2026-10-11
+
 ### Fixed
 
 - **Token usage of streaming calls.** `stream()` calls (including LangChain models with
@@ -106,6 +108,7 @@ First public release.
 - The `http` exporter supports Internet destinations only.
 - Not yet verified against SAP Cloud ALM; live AI Core tests are opt-in.
 
-[Unreleased]: https://github.com/viveka10/npm_token_optimizer/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/viveka10/npm_token_optimizer/compare/v0.1.2...HEAD
+[0.1.2]: https://github.com/viveka10/npm_token_optimizer/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/viveka10/npm_token_optimizer/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/viveka10/npm_token_optimizer/releases/tag/v0.1.0
