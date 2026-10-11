@@ -103,7 +103,7 @@ describe('TokenOptimizer.wrap', () => {
     expect(events[0]).toMatchObject({ sdk: 'foundation-models', model: 'gpt-4o', resourceGroup: 'rg', requestId: null })
   })
 
-  test('stream is passed through and recorded without usage', async () => {
+  test('a stream that can\'t be tracked is passed through and recorded right away', async () => {
     const { opt, events } = setup()
     const res = await opt.wrap(orchestrationClient()).stream({ messages: [] })
     expect(res).toEqual({ stream: 'S' })

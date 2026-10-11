@@ -10,6 +10,10 @@
  *
  * Rule: nothing the optimizer does may break the AI call. If the pipeline fails, the original
  * request is sent. Only errors thrown by the SDK itself reach the caller, unchanged.
+ *
+ * Streaming calls are recorded when the caller has read the stream to the end, so the event
+ * has AI Core's token usage, finish reason and the full latency. A stream that fails, is
+ * closed early or is not read within STREAM_RECORD_TIMEOUT_MS is recorded at that point.
  */
 const { resolveConfig, forUseCase } = require('./config')
 const { MetricsCollector } = require('./metrics/collector')
@@ -30,6 +34,7 @@ const WRAPPED = Symbol.for('cap-ai-token-optimizer.wrapped')
 const LANGCHAIN_WRAPPED = Symbol.for('cap-ai-token-optimizer.langchain')
 const MAX_PREFIXES = 1000
 const ADVISORY_LOG_INTERVAL_MS = 10 * 60 * 1000
+const STREAM_RECORD_TIMEOUT_MS = 10 * 60 * 1000
 
 class TokenOptimizer {
   /**
@@ -40,6 +45,7 @@ class TokenOptimizer {
     this.collector = new MetricsCollector()
     this._deps = deps
     this._sleep = deps.sleep ?? ((ms) => new Promise(resolve => setTimeout(resolve, ms)))
+    this._streamRecordTimeoutMs = deps.streamRecordTimeoutMs ?? STREAM_RECORD_TIMEOUT_MS
     this._configured = false
     this.cache = null
     // last prompt prefix (system + tools) per use case and model, for the prompt-caching advisory
@@ -253,10 +259,11 @@ class TokenOptimizer {
         // the original method: a hooked one would route the call through an optimizer again
         const response = await instrument.originalOf(plan.client[methodName]).apply(plan.client, callArgs)
         if (ctx.cacheKey) this._cacheSet(ctx, response)
+        if (method.operation === 'stream' && safe(() => this._trackStream(ctx, { started, retries, response }), logRecordError)) return response
         safe(() => this._record(ctx, { started, retries, response }), logRecordError)
         return response
       } catch (err) {
-        const classified = safe(() => classifyError(err)) ?? { category: 'UNKNOWN', httpStatus: null, code: null, message: String(err?.message ?? err), retryAfterMs: null }
+        const classified = safe(() => classifyError(err)) ?? unknownError(err)
         const delay = this._retryDelay(cfg, classified, retries)
         if (delay != null) {
           retries++
@@ -268,6 +275,44 @@ class TokenOptimizer {
         throw err
       }
     }
+  }
+
+  /**
+   * Record a streaming call when its stream ends: replaces `response.stream` with a stream of
+   * the same class that passes every chunk through unchanged and records the event once, when
+   * the stream is read to the end (with AI Core's usage), fails (the error is classified and
+   * rethrown), is closed early by the caller, or is not read within the record timeout.
+   * @returns {boolean} false if the stream can't be tracked; the caller then records right away
+   */
+  _trackStream (ctx, { started, retries, response }) {
+    const original = response?.stream
+    const Stream = original?.constructor
+    if (typeof original?.[Symbol.asyncIterator] !== 'function' || typeof Stream !== 'function' || Stream === Object) return false
+
+    let recorded = false
+    const record = (outcome = {}) => {
+      if (recorded) return
+      recorded = true
+      clearTimeout(timer)
+      safe(() => this._record(ctx, { started, retries, response, ...outcome }), logRecordError)
+    }
+    const timer = setTimeout(() => record({ note: 'stream: not read to the end within the record timeout' }), this._streamRecordTimeoutMs)
+    timer.unref?.()
+
+    async function * tracked () {
+      let ended = false
+      try {
+        for await (const chunk of original) yield chunk
+        ended = true
+      } catch (err) {
+        record({ error: safe(() => classifyError(err)) ?? unknownError(err) })
+        throw err
+      } finally {
+        record(ended ? {} : { note: 'stream: closed by the caller before the end' })
+      }
+    }
+    response.stream = new Stream(() => tracked(), original.controller)
+    return true
   }
 
   /**
@@ -375,7 +420,7 @@ class TokenOptimizer {
     return Math.min(r.maxDelayMs, Math.round(backoff / 2 + Math.random() * backoff / 2))
   }
 
-  _record (ctx, { started, retries, response, error, cacheEntry }) {
+  _record (ctx, { started, retries, response, error, cacheEntry, note }) {
     const latencyMs = Math.round(performance.now() - started)
     const cfg = ctx.cfg
     const info = ctx.info ?? {}
@@ -398,6 +443,7 @@ class TokenOptimizer {
     const model = info.model ?? null
     const notes = [...(pipeline?.notes ?? [])]
     if (ctx.pipelineFailed) notes.push('pipeline failed; original request sent')
+    if (note) notes.push(note)
     const advisory = cacheEntry ? null : safe(() => this._checkPrefix(ctx))
 
     const event = buildEvent({
@@ -452,6 +498,8 @@ function prefixOf (messages, tools) {
 }
 
 const logRecordError = (e) => log.warn('could not record call metrics:', e?.message)
+
+const unknownError = (err) => ({ category: 'UNKNOWN', httpStatus: null, code: null, message: String(err?.message ?? err), retryAfterMs: null })
 
 /**
  * Run `fn`, returning undefined instead of throwing.

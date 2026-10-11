@@ -7,6 +7,10 @@
  * (orchestration: `{ error: { code, message, location } }`, Azure OpenAI: `{ error: { code, message, innererror } }`).
  * Deployment-resolution and OAuth failures wrap further levels of `cause`. We therefore walk the
  * whole cause chain (and AggregateError.errors) and collect every signal before deciding.
+ *
+ * Errors inside a stream are thrown by the SDK's SSE parser as
+ * `Error("Error received from the server.\n<JSON error>")`, wrapped in
+ * `ErrorWithCause("Error while iterating over SSE stream.")`; the JSON is read like a response body.
  */
 
 const CATEGORIES = Object.freeze([
@@ -24,6 +28,7 @@ const RE_TIMEOUT = /timeout of \d+ms exceeded|timed? ?out|deadline exceeded/i
 const RE_DEPLOYMENT = /no deployment matched|deployment not found|DeploymentNotFound|has no deployment url/i
 const RE_AUTH = /unauthori[sz]ed|forbidden|invalid[_ ]client|could not fetch client credentials token/i
 const RE_NETWORK = /socket hang up|network error|fetch failed|getaddrinfo|connect ECONN/i
+const RE_SSE_ERROR = /^Error received from the server\.\n(\{[\s\S]*\})$/
 
 const TIMEOUT_CODES = new Set(['ECONNABORTED', 'ETIMEDOUT', 'ESOCKETTIMEDOUT', 'ERR_TIMEOUT', 'UND_ERR_CONNECT_TIMEOUT', 'UND_ERR_HEADERS_TIMEOUT', 'UND_ERR_BODY_TIMEOUT'])
 const NETWORK_CODES = new Set(['ECONNREFUSED', 'ECONNRESET', 'ENOTFOUND', 'EAI_AGAIN', 'EPIPE', 'EHOSTUNREACH', 'ENETUNREACH', 'ENETDOWN', 'ERR_NETWORK', 'UND_ERR_SOCKET'])
@@ -97,7 +102,7 @@ function collectSignals (root) {
     if (typeof e.message === 'string' && e.message) s.texts.push(e.message)
     s.retryAfter ??= header(e.response?.headers, 'retry-after') ?? header(e.headers, 'retry-after')
 
-    const body = parseBody(e.response?.data ?? e.body)
+    const body = parseBody(e.response?.data ?? e.body ?? sseErrorBody(e.message))
     const errors = providerErrors(body)
     // a non-JSON body (e.g. a gateway's "Payload Too Large") is the most useful message we have
     if (!errors.length && typeof body?.message === 'string' && body.message) {
@@ -130,6 +135,13 @@ function providerErrors (body) {
   if (err && typeof err === 'object') return [err]
   if (typeof body.code !== 'undefined' && typeof body.message === 'string') return [body]
   return []
+}
+
+/** The `{ error }` body of an error event in a stream, from the SDK's error message. */
+function sseErrorBody (message) {
+  const json = typeof message === 'string' ? RE_SSE_ERROR.exec(message)?.[1] : null
+  if (!json) return undefined
+  try { return { error: JSON.parse(json) } } catch { return undefined }
 }
 
 function parseBody (data) {

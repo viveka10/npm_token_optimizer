@@ -130,7 +130,8 @@ for the same requests.
 - **Scope:** the hooks apply to every caller in the process, including libraries. If you want
   to choose exactly which calls are optimized, leave `autoInstrument` off and use `wrap()`,
   `withUseCase()` and `wrapLangChain()` instead.
-- **Streaming:** `stream()` calls are measured but not optimized, and have no token usage.
+- **Streaming:** `stream()` calls are measured, with token usage once the stream has been read
+  to the end, but not optimized.
 - **Use cases:** without `withUseCase()`, all hooked calls share the use case set in
   `autoInstrument.useCase` (default `default`), so per-use-case settings apply to all of them.
 - **Start-up:** the hooks are installed when the CAP plugin loads. Outside CAP, call

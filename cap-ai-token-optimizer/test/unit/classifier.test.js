@@ -38,6 +38,21 @@ describe('classifyError', () => {
     expect(CATEGORIES).toContain(c.category)
   })
 
+  test.each([
+    [{ code: 429, message: 'Rate limit exceeded' }, 'RATE_LIMIT', 429],
+    [{ code: 500, message: 'Internal error', location: 'LLM Module' }, 'SERVER', 500],
+    [{ code: 400, message: 'Output filtered', location: 'Filtering Module - Output Filter' }, 'CONTENT_FILTER', 400]
+  ])('error event inside a stream: %j', (error, category, httpStatus) => {
+    const inner = new Error(`Error received from the server.\n${JSON.stringify(error)}`)
+    const err = new Error('Error while iterating over SSE stream.', { cause: inner })
+    expect(classifyError(err)).toMatchObject({ category, httpStatus, message: error.message })
+  })
+
+  test('a stream error message with invalid JSON is not parsed', () => {
+    const err = new Error('Error while iterating over SSE stream.', { cause: new Error('Error received from the server.\n{oops}') })
+    expect(classifyError(err)).toMatchObject({ category: 'UNKNOWN', httpStatus: null })
+  })
+
   test('axios timeout', () => {
     const axios = Object.assign(new Error('timeout of 300ms exceeded'), { name: 'AxiosError', code: 'ECONNABORTED' })
     const err = Object.assign(new Error('Request failed with status code undefined.'), { cause: axios })

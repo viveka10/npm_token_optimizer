@@ -104,7 +104,10 @@ Wrap clients once (for example in your service's `init()`) and reuse them.
 
 - **Supported clients:** `OrchestrationClient` (`chatCompletion`, `stream`) and
   `AzureOpenAiChatClient` (`run`, `stream`). Other methods are forwarded untouched.
-- **Streaming:** `stream()` calls are passed through unoptimized and recorded without token usage.
+- **Streaming:** `stream()` calls are passed through unoptimized. They are recorded when the
+  stream has been read to the end, with AI Core's token usage, the finish reason and the latency
+  of the whole answer. A failure inside the stream is recorded as an error. A stream closed early,
+  or not read within 10 minutes, is recorded at that point without usage and with a note.
 - **Errors:** SDK errors are rethrown unchanged. Use `classifyError(err)` to get the failure category.
 
 ```js
@@ -141,7 +144,7 @@ This hooks the `@sap-ai-sdk` client classes `OrchestrationClient` (`chatCompleti
   In short:
   - only these two classes from SDK 2.x, and only the SDK copy resolved from the app root;
   - process-wide, including libraries;
-  - streaming is measured but not optimized.
+  - streaming is measured (with token usage) but not optimized.
 
 ### withUseCase
 
@@ -462,7 +465,8 @@ One event per call:
 
 - Prompt and completion text are never recorded by default; only a SHA-256 hash and the length.
   `user` is a salted hash of the user id.
-- `tokens.prompt`/`completion`/`total`/`cached` come from the AI Core response.
+- `tokens.prompt`/`completion`/`total`/`cached` come from the AI Core response, for streams
+  from the last chunk. Orchestration streams don't report cached tokens (`cached` is 0).
   `promptEstimatedBefore`/`After` are estimates before and after optimization (js-tiktoken for
   OpenAI model families, characters ÷ 4 for other models).
 - `savings.estimatedTokens` is estimated prompt tokens saved plus, for cache hits, the cached

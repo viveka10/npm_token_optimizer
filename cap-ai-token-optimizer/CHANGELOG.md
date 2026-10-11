@@ -6,6 +6,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **Token usage of streaming calls.** `stream()` calls (including LangChain models with
+  streaming, as used by `@cap-js/agents`) were recorded when the stream opened, without token
+  usage. They are now recorded when the stream ends, with AI Core's usage, finish reason, request
+  id and cost.
+- **Errors inside a stream** were not recorded, and the call counted as a success. They are now
+  recorded as errors and classified from the error event AI Core sends (for example `SERVER`,
+  `RATE_LIMIT`, `CONTENT_FILTER`).
+
+### Changed
+
+- `latencyMs` of streaming calls now covers the whole answer instead of the time until the
+  stream opened. A stream closed early by the caller, or not read within 10 minutes, is recorded
+  at that point without usage and with a note in `savings.notes`.
+- The mock AI Core server answers streaming requests as server-sent events and has a
+  `stream_error` scenario.
+
 ## [0.1.1] - 2026-10-10
 
 ### Added

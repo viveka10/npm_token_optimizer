@@ -8,18 +8,22 @@
  *   POST /v2/inference/deployments/:id/v2/completion      (orchestration)
  *   POST /v2/inference/deployments/:id/chat/completions   (foundation-models, Azure OpenAI)
  *
+ * Streaming requests (orchestration `config.stream.enabled`, chat completions `stream: true`)
+ * are answered as server-sent events, with token usage in the last chunk.
+ *
  * Scenario selection, highest precedence first:
  *   1. request header   `x-mock-scenario: rate_limit`
  *   2. a marker in any message content `[[mock:rate_limit]]`
  *   3. the server default, set via `setScenario()` or `POST /__mock/scenario`
  *
  * Scenarios: ok | rate_limit | content_filter | context_length | server_error | slow | not_found | auth
+ *            | stream_error (streams fail after the first chunk; other calls answer normally)
  *
  * Run standalone: `node test/mock-aicore/server.js` – prints the AICORE_SERVICE_KEY to use.
  */
 const express = require('express')
 
-const SCENARIOS = ['ok', 'rate_limit', 'content_filter', 'context_length', 'server_error', 'slow', 'not_found', 'auth']
+const SCENARIOS = ['ok', 'rate_limit', 'content_filter', 'context_length', 'server_error', 'slow', 'not_found', 'auth', 'stream_error']
 const MARKER = /\[\[mock:([a-z_]+)\]\]/
 
 const DEPLOYMENTS = [
@@ -181,7 +185,43 @@ function createMockAiCore (options = {}) {
         if (res.destroyed || req.socket.destroyed || res.writableEnded) return
         break
     }
-    res.json(kind === 'orchestration' ? orchestrationResponse(req.body) : chatResponse(req.body, req.params.id))
+    const response = kind === 'orchestration' ? orchestrationResponse(req.body) : chatResponse(req.body, req.params.id)
+    if (isStreamRequest(kind, req.body)) return sendStream(res, kind, response, scenario === 'stream_error')
+    res.json(response)
+  }
+
+  const isStreamRequest = (kind, body) => kind === 'orchestration' ? body?.config?.stream?.enabled === true : body?.stream === true
+
+  /**
+   * Send a complete response as server-sent events: the answer in two content deltas, the
+   * finish reason in the second, and the usage in the last chunk (orchestration: with the
+   * second delta, chat completions: a separate chunk without choices, as with
+   * `stream_options.include_usage`). With `fail`, an error event follows the first chunk.
+   */
+  const sendStream = (res, kind, response, fail) => {
+    const llm = kind === 'orchestration' ? response.final_result : response
+    const content = llm.choices[0].message.content
+    const half = Math.ceil(content.length / 2)
+    const base = { id: llm.id, object: 'chat.completion.chunk', created: llm.created, model: llm.model }
+    const delta = (text, finish, extra = {}) => ({
+      ...base,
+      choices: [{ index: 0, delta: { role: 'assistant', content: text }, finish_reason: finish }],
+      ...extra
+    })
+    const chunks = kind === 'orchestration'
+      ? [delta(content.slice(0, half), null), delta(content.slice(half), 'stop', { usage: llm.usage })]
+        .map(final => ({ request_id: response.request_id, intermediate_results: {}, final_result: final }))
+      : [delta(content.slice(0, half), null), delta(content.slice(half), 'stop'), { ...base, choices: [], usage: llm.usage }]
+    res.status(200).set({ 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache' })
+    const send = (data) => res.write(`data: ${typeof data === 'string' ? data : JSON.stringify(data)}\n\n`)
+    if (fail) {
+      send(chunks[0])
+      send({ error: { code: 500, message: 'Mock: stream interrupted' } })
+      return res.end()
+    }
+    for (const chunk of chunks) send(chunk)
+    send('[DONE]')
+    res.end()
   }
 
   const usageFor = (messages, completion) => {
