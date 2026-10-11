@@ -21,6 +21,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   come from the plugin's `.cdsrc.js` and are computed from the app's final configuration
   (profiles and environment variables included). Apps that worked around this by listing the
   models in `cds.requires.tokenOptimizer.model` keep working and can remove the list.
+- **Admin service for Fiori elements:** the in-memory entities (`UseCases`, `Models`,
+  `ErrorCategories`, `StepSavings`, `PromptPrefixChanges`, `Exporters`) answered `$count=true`
+  with 0, so list reports showed empty tables, and `UseCases` and `Models` returned `tokens` as a
+  nested object instead of the `tokens_*` columns of their OData metadata.
 
 ### Changed
 

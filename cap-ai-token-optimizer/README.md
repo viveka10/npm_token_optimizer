@@ -600,6 +600,9 @@ for users with the role `admin.role` (default `TokenOptimizerAdmin`):
 | `UsageLog` | the `TokenUsageLog` rows, if the `db` exporter is enabled (supports `$filter`, `$orderby`, `$top`, …) |
 
 All entries except `UsageLog` are in-memory stats of the app instance that answers, since it started.
+They support key lookups and `$count`, which is enough for a Fiori elements list report, but not
+`$filter`, `$orderby`, `$search` or paging. With flat OData (the default), `tokens` is exposed as
+`tokens_prompt`, `tokens_completion`, `tokens_total` and `tokens_cached`.
 
 To grant access, add the role to `xs-security.json` and a role collection:
 

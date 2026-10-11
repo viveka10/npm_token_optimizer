@@ -13,11 +13,30 @@ const totals = (t) => ({
   costEstimate: t.costEstimate
 })
 
-/** Rows for a READ, honouring a key lookup (e.g. UseCases('ask')). */
+/**
+ * OData exposes structured elements (`tokens`) as flat columns (`tokens_prompt`, …) unless the
+ * app uses structured OData (`odata.structs`, e.g. flavor x4). Return rows in the same shape.
+ */
+function shape (row) {
+  if (cds.env.effective?.odata?.structs || !row.tokens) return row
+  const { tokens, ...rest } = row
+  for (const [k, v] of Object.entries(tokens)) rest[`tokens_${k}`] = v
+  return rest
+}
+
+/**
+ * Rows for a READ, honouring a key lookup (e.g. UseCases('ask')). Lists carry `$count`, so
+ * `$count=true` (used by Fiori elements to size its tables) reports the number of rows.
+ */
 function rows (req, list, key) {
   const wanted = req.data?.[key]
-  if (wanted === undefined) return list
-  return list.find(r => r[key] === wanted) ?? null
+  if (wanted !== undefined) {
+    const row = list.find(r => r[key] === wanted)
+    return row ? shape(row) : null
+  }
+  const result = list.map(shape)
+  result.$count = result.length
+  return result
 }
 
 module.exports = class TokenOptimizerService extends cds.ApplicationService {
