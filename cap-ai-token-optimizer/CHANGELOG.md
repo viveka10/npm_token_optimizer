@@ -6,6 +6,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-10-12
+
+### Added
+
+- **Dashboard:** `cds.requires.tokenOptimizer.dashboard` serves a web page with charts of
+  token usage, cost, calls, failures, savings and latency, at `/token-optimizer/dashboard/` by
+  default. It covers 24 hours to 90 days from the usage log, plus in-memory statistics of the app
+  instance. It is protected by the admin role, has no dependencies and loads nothing from other
+  servers. Off by default, and turns the admin service on.
+- **`usage(from, to, interval, groupBy)`** in the admin service: usage log totals per hour or day
+  and per model, use case, CDS service, status or error category, aggregated in the database.
+- **Fiori elements annotations** on `UsageLog`: list report columns, filters, object page,
+  chart, and `@Aggregation` / `@Analytics` for analytical list pages and `$apply`.
+
 ## [0.1.2] - 2026-10-11
 
 ### Fixed
@@ -108,7 +122,8 @@ First public release.
 - The `http` exporter supports Internet destinations only.
 - Not yet verified against SAP Cloud ALM; live AI Core tests are opt-in.
 
-[Unreleased]: https://github.com/viveka10/npm_token_optimizer/compare/v0.1.2...HEAD
+[Unreleased]: https://github.com/viveka10/npm_token_optimizer/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/viveka10/npm_token_optimizer/compare/v0.1.2...v0.2.0
 [0.1.2]: https://github.com/viveka10/npm_token_optimizer/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/viveka10/npm_token_optimizer/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/viveka10/npm_token_optimizer/releases/tag/v0.1.0
