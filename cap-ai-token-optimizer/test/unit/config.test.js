@@ -45,6 +45,16 @@ describe('config', () => {
     expect(resolveConfig({ autoInstrument: { enabled: true, useCase: 'x' } }).autoInstrument).toEqual({ enabled: true, useCase: 'x' })
   })
 
+  test('dashboard accepts a boolean and turns on the admin service', () => {
+    expect(resolveConfig({}).dashboard).toEqual({ enabled: false, path: '/token-optimizer/dashboard' })
+    expect(resolveConfig({}).admin.enabled).toBe(false)
+    const on = resolveConfig({ dashboard: true, admin: { role: 'Ops' } })
+    expect(on.dashboard).toEqual({ enabled: true, path: '/token-optimizer/dashboard' })
+    expect(on.admin).toEqual({ enabled: true, role: 'Ops' })
+    expect(resolveConfig({ dashboard: { enabled: true, path: '/ai/usage' } }).dashboard.path).toBe('/ai/usage')
+    expect(resolveConfig({ dashboard: false }).admin.enabled).toBe(false)
+  })
+
   test('strips CAP-internal keys', () => {
     const cfg = resolveConfig({ kind: 'token-optimizer', impl: 'x', model: 'y', mode: 'off' })
     expect(cfg).not.toHaveProperty('kind')

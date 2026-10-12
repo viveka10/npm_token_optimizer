@@ -174,6 +174,74 @@ describeIf('sample-cap-agent', () => {
       expect(Array.isArray(changes.value)).toBe(true)
     })
 
+    test('usage(): totals per day and model, aggregated in the database', async () => {
+      configure({ metrics: { exporters: ['db'] } })
+      await POST('/odata/v4/agent/ask', { question: 'count me' }, alice)
+      await POST('/odata/v4/agent/ask', { question: 'boom [[mock:rate_limit]]' }, alice).catch(() => {})
+      await optimizer.flush()
+      const day = new Date().toISOString().slice(0, 10)
+      const to = new Date(Date.now() + 60000).toISOString()
+      const from = new Date(Date.now() - 3600000).toISOString()
+
+      const { data: total } = await GET(`/odata/v4/token-optimizer/usage(from=${from},to=${to},interval='none',groupBy=null)`, ops)
+      expect(total.value).toHaveLength(1)
+      const t = total.value[0]
+      expect(t).toMatchObject({ bucket: null, name: null, calls: expect.any(Number), cacheHits: expect.any(Number) })
+      expect(t.errors).toBeGreaterThanOrEqual(1)
+      expect(t.totalTokens).toBe(t.promptTokens + t.completionTokens)
+
+      const { data: byModel } = await GET(`/odata/v4/token-optimizer/usage(from=${from},to=${to},interval='day',groupBy='model')`, ops)
+      expect(byModel.value).toEqual([expect.objectContaining({ bucket: `${day}T00:00:00Z`, name: 'gpt-4.1', calls: t.calls })])
+      const { data: hourly } = await GET(`/odata/v4/token-optimizer/usage(from=${from},to=${to},interval='hour',groupBy='status')`, ops)
+      expect(hourly.value.map(r => r.name).sort()).toEqual(expect.arrayContaining(['error', 'success']))
+      expect(hourly.value[0].bucket).toMatch(/^\d{4}-\d\d-\d\dT\d\d:00:00Z$/)
+
+      // outside the window: nothing
+      const { data: none } = await GET("/odata/v4/token-optimizer/usage(from=2020-01-01T00:00:00Z,to=2020-01-02T00:00:00Z,interval='day',groupBy=null)", ops)
+      expect(none.value).toEqual([])
+      // defaults: the last 7 days, per day
+      const { data: dflt } = await GET('/odata/v4/token-optimizer/usage(from=null,to=null,interval=null,groupBy=null)', ops)
+      expect(dflt.value.at(-1)).toMatchObject({ bucket: `${day}T00:00:00Z`, calls: t.calls })
+    })
+
+    test('usage(): rejects bad parameters', async () => {
+      const status = async (params) => {
+        const e = await GET(`/odata/v4/token-optimizer/usage(${params})`, ops).catch(e => e)
+        return e.status ?? e.response?.status
+      }
+      expect(await status("from=null,to=null,interval='week',groupBy=null")).toBe(400)
+      expect(await status("from=null,to=null,interval='day',groupBy='promptHash'")).toBe(400)
+      expect(await status("from=2026-02-01T00:00:00Z,to=2026-01-01T00:00:00Z,interval='day',groupBy=null")).toBe(400)
+      expect(await status("from=2026-01-01T00:00:00Z,to=2026-03-01T00:00:00Z,interval='hour',groupBy=null")).toBe(400)
+      const denied = await GET('/odata/v4/token-optimizer/usage(from=null,to=null,interval=null,groupBy=null)', alice).catch(e => e)
+      expect(denied.status ?? denied.response?.status).toBe(403)
+    })
+
+    test('UsageLog has Fiori elements annotations and supports $apply', async () => {
+      const { data: metadata } = await GET('/odata/v4/token-optimizer/$metadata', ops)
+      expect(metadata).toContain('<Annotations Target="TokenOptimizerService.UsageLog">')
+      expect(metadata).toContain('Term="UI.LineItem"')
+      expect(metadata).toContain('Term="UI.Chart"')
+      expect(metadata).toContain('Term="Aggregation.ApplySupported"')
+      const { data } = await GET('/odata/v4/token-optimizer/UsageLog?$apply=groupby((model),aggregate(totalTokens with sum as tokens))', ops)
+      expect(data.value).toEqual([expect.objectContaining({ model: 'gpt-4.1', tokens: expect.any(Number) })])
+    })
+
+    test('dashboard page: login, role, and the relative service path', async () => {
+      const page = await GET('/token-optimizer/dashboard/', ops)
+      expect(page.headers['content-type']).toMatch(/text\/html/)
+      expect(page.headers['content-security-policy']).toMatch(/default-src 'none'/)
+      expect(page.data).toContain('data-service="../../odata/v4/token-optimizer"')
+      expect(page.data).toContain('data-usage-log="true"')
+      const script = await GET('/token-optimizer/dashboard/dashboard.js', ops)
+      expect(script.headers['content-type']).toMatch(/javascript/)
+
+      const status = (p, auth) => GET(p, auth).then(r => r.status, e => e.status ?? e.response?.status)
+      expect(await status('/token-optimizer/dashboard/')).toBe(401)
+      expect(await status('/token-optimizer/dashboard/', alice)).toBe(403)
+      expect(await status('/token-optimizer/dashboard/package.json', ops)).toBe(404)
+    })
+
     test('requires the role and is read-only', async () => {
       const denied = await GET('/odata/v4/token-optimizer/summary()', alice).catch(e => e)
       expect(denied.status ?? denied.response?.status).toBe(403)

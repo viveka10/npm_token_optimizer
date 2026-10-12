@@ -17,6 +17,10 @@ module.exports = [
     }
   },
   {
+    files: ['dashboard/**/*.js'],
+    languageOptions: { sourceType: 'script', globals: { ...globals.browser } }
+  },
+  {
     files: ['test/**/*.js'],
     languageOptions: { globals: { ...globals.jest } }
   }

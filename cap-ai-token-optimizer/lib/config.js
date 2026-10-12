@@ -54,6 +54,9 @@ const DEFAULTS = Object.freeze({
   autoInstrument: { enabled: false, useCase: 'default' },
   // Read-only admin service at /odata/v4/token-optimizer, for users with `role`
   admin: { enabled: false, role: 'TokenOptimizerAdmin' },
+  // Web dashboard at `path` with charts from the admin service; turns the admin service on.
+  // Served to users with admin.role.
+  dashboard: { enabled: false, path: '/token-optimizer/dashboard' },
   captureContent: false
 })
 
@@ -104,6 +107,8 @@ function resolveConfig (userConfig, log = {}) {
     }
   }
   if (typeof cfg.autoInstrument === 'boolean') cfg.autoInstrument = { ...DEFAULTS.autoInstrument, enabled: cfg.autoInstrument }
+  if (typeof cfg.dashboard === 'boolean') cfg.dashboard = { ...DEFAULTS.dashboard, enabled: cfg.dashboard }
+  if (cfg.dashboard.enabled) cfg.admin.enabled = true
   if (typeof cfg.metrics.exporters === 'string') cfg.metrics.exporters = [cfg.metrics.exporters]
   if (!Array.isArray(cfg.metrics.exporters)) cfg.metrics.exporters = [...DEFAULTS.metrics.exporters]
   return cfg

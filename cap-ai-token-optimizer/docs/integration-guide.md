@@ -63,9 +63,10 @@ Use the feature of your app that calls AI Core. Each call prints one line like:
 `savings.estimatedTokens` is what active mode would have saved on this call;
 `savings.byStep` shows which step saved it.
 
-For a summary, enable the admin service in the same configuration block
-(`"admin": { "enabled": true }`), give your user the `TokenOptimizerAdmin` role, and open
-`/odata/v4/token-optimizer/summary()`.
+For charts, enable the dashboard and the usage log in the same configuration block
+(`"dashboard": true` and `"db"` in `metrics.exporters`), give your user the
+`TokenOptimizerAdmin` role, and open `/token-optimizer/dashboard/`. The dashboard also turns on
+the read-only admin service, for example `/odata/v4/token-optimizer/summary()`.
 
 ## 5. Name your use cases (1 minute, optional)
 
@@ -116,7 +117,8 @@ for the same requests.
   (usage log table) or `http` to `metrics.exporters`.
 - **`captureContent`:** keep it off.
 - **Admin role:** add the `TokenOptimizerAdmin` role to `xs-security.json` if you enabled the
-  admin service.
+  admin service or the dashboard, and route `/token-optimizer/` through the approuter for the
+  dashboard.
 
 ## Limits of automatic instrumentation
 

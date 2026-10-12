@@ -8,8 +8,11 @@ A small CAP app that calls SAP AI Core through [@viveka10/cap-ai-token-optimizer
 
 Every call prints one JSON metrics line (`"type":"ai-core-call"`) to the console.
 
-The read-only admin service is enabled at `/odata/v4/token-optimizer`; in development the
-mocked user `ops` has the `TokenOptimizerAdmin` role (see `http/requests.http`).
+The dashboard is enabled at <http://localhost:4004/token-optimizer/dashboard/>, together with
+the read-only admin service at `/odata/v4/token-optimizer`. In development, log in as the
+mocked user `ops` (empty password), who has the `TokenOptimizerAdmin` role (see
+`http/requests.http`). Calls are stored in the usage log (the `db` exporter), so the charts fill
+as you call `ask` and `runAgent`.
 
 ## Run with the mock AI Core (development)
 

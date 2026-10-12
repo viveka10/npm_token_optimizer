@@ -121,6 +121,11 @@ export interface TokenOptimizerConfig {
   advisories?: { promptCache?: boolean }
   /** Read-only OData service at /odata/v4/token-optimizer. */
   admin?: { enabled?: boolean, role?: string }
+  /**
+   * Web dashboard (charts of token usage, cost, savings and errors) at `path`, default
+   * /token-optimizer/dashboard. Enables the admin service and requires its role. Default off.
+   */
+  dashboard?: boolean | { enabled?: boolean, path?: string }
   /** Include raw prompt and completion text in events. Off by default. */
   captureContent?: boolean
 }

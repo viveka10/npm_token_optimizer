@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>AI token usage</title>
+  <link rel="stylesheet" href="dashboard.css">
+  <script src="dashboard.js" defer></script>
+</head>
+<body data-service="{{service}}" data-usage-log="{{usageLog}}">
+  <main class="page">
+    <header class="head">
+      <div>
+        <h1>AI token usage</h1>
+        <p class="sub">SAP AI Core calls recorded by cap-ai-token-optimizer. Token savings and cost are estimates.</p>
+      </div>
+      <p class="status" id="status" role="status" aria-live="polite"></p>
+    </header>
+
+    <section id="log" hidden>
+      <div class="filters" role="toolbar" aria-label="Filters">
+        <div class="seg" role="radiogroup" aria-label="Time range" id="range">
+          <button type="button" role="radio" data-range="24h">24 hours</button>
+          <button type="button" role="radio" data-range="7d">7 days</button>
+          <button type="button" role="radio" data-range="30d">30 days</button>
+          <button type="button" role="radio" data-range="90d">90 days</button>
+        </div>
+        <label class="select">Split by
+          <select id="groupBy">
+            <option value="model">Model</option>
+            <option value="useCase">Use case</option>
+            <option value="cdsService">CDS service</option>
+          </select>
+        </label>
+        <button type="button" class="ghost" id="refresh">Refresh</button>
+        <span class="note" id="tz">Times in UTC</span>
+      </div>
+
+      <div class="tiles" id="tiles"></div>
+
+      <div class="grid">
+        <article class="card wide" id="c-tokens"></article>
+        <article class="card" id="c-calls"></article>
+        <article class="card" id="c-cost"></article>
+        <article class="card" id="c-model"></article>
+        <article class="card" id="c-usecase"></article>
+        <article class="card" id="c-errors"></article>
+        <article class="card wide" id="c-largest"></article>
+        <article class="card wide" id="c-failed"></article>
+      </div>
+    </section>
+
+    <section id="nolog" class="notice" hidden>
+      <h2>No usage history</h2>
+      <p>Charts over time need the <code>db</code> exporter, which stores one row per AI call.
+        Add it to <code>cds.requires.tokenOptimizer.metrics.exporters</code>. Below are the
+        statistics this app instance has kept in memory since it started.</p>
+    </section>
+
+    <section id="instance">
+      <div class="section-head">
+        <h2>This app instance</h2>
+        <p class="note" id="since"></p>
+      </div>
+      <div class="tiles" id="itiles"></div>
+      <div class="grid">
+        <article class="card" id="c-imodel" hidden></article>
+        <article class="card" id="c-iusecase" hidden></article>
+        <article class="card" id="c-steps"></article>
+        <article class="card" id="c-prefix"></article>
+        <article class="card" id="c-exporters"></article>
+      </div>
+    </section>
+  </main>
+  <div class="tip" id="tip" role="tooltip" hidden></div>
+</body>
+</html>

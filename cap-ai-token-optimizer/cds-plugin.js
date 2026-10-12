@@ -11,6 +11,7 @@ try {
   optimizer.configure(cds.env.requires?.tokenOptimizer)
   log.debug('configured, mode =', optimizer.config.mode, 'exporters =', optimizer.config.metrics.exporters)
   setupAdminRole(optimizer.config)
+  setupDashboard(optimizer.config)
 } catch (e) {
   log.error('could not configure token optimizer:', e?.message)
 }
@@ -25,6 +26,19 @@ function setupAdminRole (cfg) {
   cds.on('loaded', (csn) => {
     const srv = csn?.definitions?.TokenOptimizerService
     if (srv) srv['@requires'] = role
+  })
+}
+
+/** The web dashboard is mounted on the app's express instance before the services are served. */
+function setupDashboard (cfg) {
+  if (!cfg.dashboard?.enabled) return
+  cds.on('bootstrap', (app) => {
+    try {
+      const at = require('./lib/dashboard').mountDashboard(app, cfg, cds)
+      log.info('dashboard served at', at)
+    } catch (e) {
+      log.error('could not serve the dashboard:', e?.message)
+    }
   })
 }
 

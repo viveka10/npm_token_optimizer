@@ -227,6 +227,20 @@ It requires the role `TokenOptimizerAdmin` (configurable with `admin.role`). Add
 Merge this into your existing file; don't replace it. After deploying, assign the role
 collection to the right users in the BTP cockpit (Security → Role Collections).
 
+### Dashboard
+
+With `"dashboard": true` (this also turns on the admin service), the app serves a web page with
+charts at `/token-optimizer/dashboard/`, for users with the same role. For charts over time,
+also enable the `db` exporter (step 7). Route the path through the approuter like the OData
+paths, in `xs-app.json`:
+
+```json
+{ "source": "^/token-optimizer/(.*)$", "target": "/token-optimizer/$1", "destination": "srv-api", "authenticationType": "xsuaa" }
+```
+
+Then open `https://<approuter-url>/token-optimizer/dashboard/`. See the
+[README](../README.md#dashboard) for what it shows.
+
 ## 9. SAP Cloud ALM
 
 The optimizer has no Cloud ALM-specific code. Its `otel` exporter writes OpenTelemetry metrics
@@ -353,8 +367,8 @@ off (`SAP_CALM_INSTRUMENTATION_ENABLED=false`) are on SAP's auto-instrumentation
   use cases are Health, Exception, Job & Automation, Business Process and Real User Monitoring.
 - **Not verified:** this setup hasn't been tested against a Cloud ALM tenant.
 
-If you need token dashboards, use the `db` exporter with the admin service or your own
-reporting service, or send the `otel` data to SAP Cloud Logging or Dynatrace via
+If you need token dashboards, use the built-in [dashboard](#dashboard) with the `db` exporter,
+your own reporting service, or send the `otel` data to SAP Cloud Logging or Dynatrace via
 `@cap-js/telemetry` (`cds.requires.telemetry.kind` = `to-cloud-logging` / `to-dynatrace`).
 Note that with the agent present, `@cap-js/telemetry` also exports through its own
 configured kind (console by default), so check the log volume after deploying.
@@ -415,7 +429,7 @@ use case.
 - [ ] Salt and other secrets in an `.mtaext` that is not committed
 - [ ] Optional: `withUseCase` / `wrapLangChain` for named use cases
 - [ ] Optional: `db` exporter (HANA table deployed with the app; MTX upgrade)
-- [ ] Optional: admin service plus `TokenOptimizerAdmin` role collection
+- [ ] Optional: admin service or dashboard plus `TokenOptimizerAdmin` role collection (and the approuter route for the dashboard)
 - [ ] Cloud ALM:
   - [ ] RBSC user and `SAP_NPM_AUTH`
   - [ ] agent ≥ 2.0.4 and `@cap-js/telemetry` ≥ 2.1.0

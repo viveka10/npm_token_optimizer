@@ -17,7 +17,10 @@ npm add @viveka10/cap-ai-token-optimizer
 - **Measure** every AI Core call: tokens, estimated savings, latency, cost, cache hits and
   classified failures, per tenant, use case and model.
 - **Report** to the console, an HTTP endpoint or BTP destination, OpenTelemetry
-  (SAP Cloud ALM, Dynatrace, …), a database table, and a read-only admin service.
+  (SAP Cloud ALM, Dynatrace, …), a database table, and a read-only OData admin service.
+- **See** it in a built-in [dashboard](#dashboard): charts of tokens, cost, calls, failures,
+  savings and latency per model and use case, over 24 hours to 90 days. One setting turns it on,
+  with no UI build and no extra dependencies. Or build your own Fiori app on the annotated usage log.
 
 Works with CAP apps, including CAP apps that act as MCP servers or AI agents, and with plain
 Node.js. Wraps the SAP Cloud SDK for AI (`@sap-ai-sdk/orchestration`, `@sap-ai-sdk/foundation-models`).
@@ -32,6 +35,7 @@ Deploying on SAP BTP with an AI Core binding and SAP Cloud ALM? See
 [Existing code and LangChain](#instrumenting-existing-code-and-langchain) · [Compatibility](#compatibility) ·
 [How prompts are optimized](#how-prompts-are-optimized) · [Configuration reference](#configuration-reference) ·
 [What is recorded](#what-is-recorded) · [Exporters](#exporters) · [Admin service](#admin-service) ·
+[Dashboard](#dashboard) · [Own reports](#own-reports-fiori-sap-analytics-cloud-grafana) ·
 [SAP Cloud ALM setup](#sap-cloud-alm-setup) · [Troubleshooting](#troubleshooting) ·
 [Development](#development)
 
@@ -73,6 +77,20 @@ your prompts unchanged:
 ```
 
 Fill in `pricing` with the rates from your contract to get cost estimates.
+
+To see the usage in a browser, store every call in the usage log and turn on the dashboard:
+
+```json
+"tokenOptimizer": {
+  "mode": "shadow",
+  "metrics": { "exporters": ["console", "db"] },
+  "dashboard": true
+}
+```
+
+Then open `/token-optimizer/dashboard/` with a user that has the `TokenOptimizerAdmin` role
+(see [Dashboard](#dashboard)). The `db` exporter adds the table `cap.ai.token_optimizer.TokenUsageLog`
+to your database, so deploy it with your app.
 
 AI Core credentials are read by the SAP Cloud SDK for AI as usual: from an `aicore` service
 binding on BTP, `cds bind --exec` locally, or the `AICORE_SERVICE_KEY` environment variable.
@@ -339,6 +357,7 @@ work as usual. Values not set use the defaults below.
   "autoInstrument": { "enabled": false, "useCase": "default" },
   "advisories": { "promptCache": true },
   "admin": { "enabled": false, "role": "TokenOptimizerAdmin" },
+  "dashboard": { "enabled": false, "path": "/token-optimizer/dashboard" },
   "captureContent": false
 }
 ```
@@ -420,6 +439,13 @@ Each step accepts `false` (off), `true` (defaults) or an options object (`{ "ena
 | `admin.enabled` | `false` | Serve the [admin service](#admin-service). |
 | `admin.role` | `"TokenOptimizerAdmin"` | Role required to read it. |
 
+### Dashboard
+
+| Key | Default | Meaning |
+|---|---|---|
+| `dashboard.enabled` | `false` | Serve the [dashboard](#dashboard). `true` is short for `{ "enabled": true }`. Also turns on the admin service. |
+| `dashboard.path` | `"/token-optimizer/dashboard"` | Where the page is served. |
+
 ### Configuring in code
 
 Functions and stores can only be set in code. `configure()` replaces the whole configuration:
@@ -436,7 +462,7 @@ optimizer.configure({
 })
 ```
 
-The `db` exporter and the admin service also need their CDS models. The plugin adds them to
+The `db` exporter, the admin service and the dashboard also need their CDS models. The plugin adds them to
 the app's model (also in `cds build` and `cds deploy`) when they are enabled in the
 configuration, including profiles and environment variables. Enable them in the
 configuration, not only in code.
@@ -597,9 +623,10 @@ for users with the role `admin.role` (default `TokenOptimizerAdmin`):
 | `StepSavings` | estimated tokens saved per step |
 | `PromptPrefixChanges` | prompt-caching advisories per use case |
 | `Exporters` | errors and stats per exporter |
-| `UsageLog` | the `TokenUsageLog` rows, if the `db` exporter is enabled (supports `$filter`, `$orderby`, `$top`, …) |
+| `UsageLog` | the `TokenUsageLog` rows, if the `db` exporter is enabled (supports `$filter`, `$orderby`, `$top`, `$apply`, …) |
+| `usage(from, to, interval, groupBy)` | `UsageLog` totals aggregated in the database, if the `db` exporter is enabled (see below) |
 
-All entries except `UsageLog` are in-memory stats of the app instance that answers, since it started.
+All entries except `UsageLog` and `usage()` are in-memory stats of the app instance that answers, since it started.
 They support key lookups and `$count`, which is enough for a Fiori elements list report, but not
 `$filter`, `$orderby`, `$search` or paging. With flat OData (the default), `tokens` is exposed as
 `tokens_prompt`, `tokens_completion`, `tokens_total` and `tokens_cached`.
@@ -612,6 +639,69 @@ To grant access, add the role to `xs-security.json` and a role collection:
   "role-templates": [{ "name": "TokenOptimizerAdmin", "scope-references": ["$XSAPPNAME.TokenOptimizerAdmin"] }]
 }
 ```
+
+`usage()` returns calls, failures, cache hits, prompt/completion/total/cached tokens, tokens
+saved, cost and average/maximum latency in `[from, to)`:
+
+- `interval`: `'hour'` (at most 31 days), `'day'` (default, at most 366 days) or `'none'`. Buckets
+  are UTC; `bucket` is the start of the hour or day, empty buckets are left out.
+- `groupBy`: `'model'`, `'useCase'`, `'cdsService'`, `'status'`, `'errorCategory'`, `'sdk'`,
+  `'operation'`, `'resourceGroup'`, or `null` for overall totals. The value is in `name`.
+- `from` defaults to 7 days before `to`, and `to` to now. Pass `null` for defaults.
+
+```http
+GET /odata/v4/token-optimizer/usage(from=2026-10-01T00:00:00Z,to=2026-10-08T00:00:00Z,interval='day',groupBy='model')
+```
+
+## Dashboard
+
+```json
+"tokenOptimizer": { "dashboard": true, "metrics": { "exporters": ["console", "db"] } }
+```
+
+Serves a web page at `/token-optimizer/dashboard/` with charts built from the admin service
+(the dashboard turns the admin service on). It needs the same role as the admin service
+(`admin.role`), and logs in the same way as the rest of the app.
+
+- **With the `db` exporter** (recommended): range presets of 24 hours, 7, 30 or 90 days, split
+  by model, use case or CDS service. It shows total tokens, cost, calls and failures, tokens saved,
+  cache hits and latency. There are charts of tokens, calls and cost over time, tokens per model
+  and use case, and failures per category. Two tables list the largest calls and the latest
+  failures. Every chart can also be shown as a table.
+- **Always:** in-memory statistics of the app instance that serves the page, since it started.
+  These are latency percentiles, tokens saved per optimization step, prompt-caching advisories
+  and exporter health. Without the `db` exporter, this is all the dashboard shows. With several
+  instances, each one only reports its own calls.
+- Times are UTC, and cost is in the currency of your `pricing`. In a multitenant app, each
+  tenant's users see that tenant's usage log.
+- The page is three static files in the package (`dashboard/`). It loads nothing from other
+  servers and sends a strict Content-Security-Policy. It uses relative URLs, so it also works
+  behind the approuter with a path prefix.
+
+Behind the approuter, route the dashboard path to the CAP service like `/odata/`, with
+`"authenticationType": "xsuaa"`:
+
+```json
+{ "source": "^/token-optimizer/(.*)$", "target": "/token-optimizer/$1", "destination": "srv-api", "authenticationType": "xsuaa" }
+```
+
+## Own reports (Fiori, SAP Analytics Cloud, Grafana)
+
+If the built-in dashboard isn't enough, build reports in your app on the same data:
+
+- **SAP Fiori elements:** `UsageLog` in the admin service has `@UI` annotations: list columns,
+  filter fields, object page and a chart of tokens per model. It also has `@Aggregation` and
+  `@Analytics` annotations. With SAP Fiori tools, generate a *List Report* or an *Analytical List
+  Page* on `TokenOptimizerService` / `UsageLog`, and add it to your app's `app/` folder or
+  HTML5 repository. Annotate further in your app with `annotate TokenOptimizerService.UsageLog with …`.
+- **Your own service:** project the entity into a service of your app (see [db](#db)) and add
+  your own aggregations and roles.
+- **SAP Analytics Cloud, Power BI or Excel:** connect to the OData service
+  `/odata/v4/token-optimizer` (`UsageLog`, or `usage()` for daily totals), for example through a
+  BTP destination with a technical user that has the admin role.
+- **Grafana, Dynatrace or SAP Cloud Logging:** use the `otel` exporter (metrics
+  `gen_ai.client.token.usage`, `cap_ai_optimizer.tokens.saved`, …) with your OpenTelemetry
+  backend. This also gives you alerting.
 
 ## SAP Cloud ALM setup
 
@@ -704,6 +794,14 @@ Check `stats().exporters.http`, or `Exporters` in the admin service:
 **Admin service returns 403 / 404**
 - 403: the user lacks `admin.role`.
 - 404: `admin.enabled` is false, or was set only in code.
+
+**Dashboard does not open or stays empty**
+- 404: `dashboard.enabled` is false or was set only in code, or (behind the approuter) the
+  `/token-optimizer/` route is missing from `xs-app.json`.
+- 401 / 403: log in with a user that has `admin.role`.
+- "No usage history": add `db` to `metrics.exporters` and deploy the `TokenUsageLog` table.
+- Empty charts with the usage log on: no calls in the selected range (times are UTC), or the
+  calls were made by another tenant.
 
 **Debug logging**
 `DEBUG=token-optimizer`, or `"cds": { "log": { "levels": { "token-optimizer": "debug" } } }`,

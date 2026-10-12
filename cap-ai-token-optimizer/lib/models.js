@@ -1,8 +1,8 @@
 'use strict'
 /**
  * The CDS models this plugin adds to the app, depending on its configuration: the
- * TokenUsageLog entity for the db exporter, the read-only admin service, and the UsageLog
- * projection when both are on.
+ * TokenUsageLog entity for the db exporter, the read-only admin service (also needed by the
+ * dashboard), and the UsageLog projection when both are on.
  */
 const { name } = require('../package.json')
 
@@ -13,7 +13,8 @@ const { name } = require('../package.json')
 function modelsFor (cfg) {
   const exporters = [].concat(cfg?.metrics?.exporters ?? [])
   const dbLog = exporters.includes('db') || exporters.includes('hana')
-  const admin = cfg?.admin?.enabled === true
+  const dashboard = cfg?.dashboard === true || cfg?.dashboard?.enabled === true
+  const admin = cfg?.admin?.enabled === true || dashboard
   const models = []
   if (dbLog) models.push(`${name}/db/token-usage-log`)
   if (admin) models.push(`${name}/srv/admin-service`)

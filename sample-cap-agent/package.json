@@ -59,7 +59,7 @@
             }
           }
         },
-        "admin": {
+        "dashboard": {
           "enabled": true
         }
       },
