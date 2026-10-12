@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-10-12
+
+### Added
+
+- Guide "Add an AI usage dashboard to your CAP agent" (`docs/dashboard.md`): install,
+  configuration, local test, role, approuter route (standalone and managed), deployment, and an
+  optional "Open Dashboard" button for a Fiori elements app. Linked from the README.
+
 ## [0.2.0] - 2026-10-12
 
 ### Added
@@ -122,7 +130,8 @@ First public release.
 - The `http` exporter supports Internet destinations only.
 - Not yet verified against SAP Cloud ALM; live AI Core tests are opt-in.
 
-[Unreleased]: https://github.com/viveka10/npm_token_optimizer/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/viveka10/npm_token_optimizer/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/viveka10/npm_token_optimizer/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/viveka10/npm_token_optimizer/compare/v0.1.2...v0.2.0
 [0.1.2]: https://github.com/viveka10/npm_token_optimizer/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/viveka10/npm_token_optimizer/compare/v0.1.0...v0.1.1

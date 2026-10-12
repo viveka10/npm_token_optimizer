@@ -1,6 +1,6 @@
 {
   "name": "@viveka10/cap-ai-token-optimizer",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "SAP CAP plugin to reduce, measure and report SAP AI Core LLM token usage: prompt optimization, response cache, cost tracking, a built-in usage dashboard, and metrics for SAP Cloud ALM / OpenTelemetry",
   "keywords": [
     "sap",
