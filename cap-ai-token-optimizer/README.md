@@ -30,6 +30,7 @@ Node.js. Wraps the SAP Cloud SDK for AI (`@sap-ai-sdk/orchestration`, `@sap-ai-s
 **New here?** [Add it to an existing CAP app in 5 minutes](https://github.com/viveka10/npm_token_optimizer/blob/main/cap-ai-token-optimizer/docs/integration-guide.md): no code changes needed.
 Deploying on SAP BTP with an AI Core binding and SAP Cloud ALM? See
 [Existing CAP app on SAP BTP](https://github.com/viveka10/npm_token_optimizer/blob/main/cap-ai-token-optimizer/docs/existing-cap-app-on-btp.md).
+Want charts for your CAP agent? [Add the dashboard step by step](https://github.com/viveka10/npm_token_optimizer/blob/main/cap-ai-token-optimizer/docs/dashboard.md).
 
 **Contents:** [Requirements](#requirements) · [Setup](#setup) · [Usage](#usage) ·
 [Existing code and LangChain](#instrumenting-existing-code-and-langchain) · [Compatibility](#compatibility) ·
@@ -658,6 +659,8 @@ GET /odata/v4/token-optimizer/usage(from=2026-10-01T00:00:00Z,to=2026-10-08T00:0
 ```json
 "tokenOptimizer": { "dashboard": true, "metrics": { "exporters": ["console", "db"] } }
 ```
+
+Step-by-step guide for an existing CAP agent: [docs/dashboard.md](https://github.com/viveka10/npm_token_optimizer/blob/main/cap-ai-token-optimizer/docs/dashboard.md).
 
 Serves a web page at `/token-optimizer/dashboard/` with charts built from the admin service
 (the dashboard turns the admin service on). It needs the same role as the admin service
